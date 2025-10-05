@@ -1,0 +1,2772 @@
+##################################################################### 
+                    Table of Contents
+===================================================================== 
+	1::Clock Frequency Summary
+	2::Clock Relationship Summary
+	3::Datasheet Report
+		3.1::Setup to Clock
+		3.2::Clock to Out
+		3.3::Pad to Pad
+	4::Path Details for Clock Frequency Summary
+		4.1::Critical Path Report for CapSense_CSD_IntClock
+	5::Path Details for Clock Relationship Summary
+		5.1::Critical Path Report for (CapSense_CSD_IntClock:R vs. CapSense_CSD_IntClock:R)
+===================================================================== 
+                    End of Table of Contents
+##################################################################### 
+
+##################################################################### 
+                    1::Clock Frequency Summary
+===================================================================== 
+Number of clocks: 8
+Clock: CapSense_CSD_IntClock  | Frequency: 59.26 MHz  | Target: 12.00 MHz  | 
+Clock: Clock_1                | N/A                   | Target: 0.10 MHz   | 
+Clock: Clock_1(routed)        | N/A                   | Target: 0.10 MHz   | 
+Clock: CyBUS_CLK              | N/A                   | Target: 24.00 MHz  | 
+Clock: CyILO                  | N/A                   | Target: 0.00 MHz   | 
+Clock: CyIMO                  | N/A                   | Target: 3.00 MHz   | 
+Clock: CyMASTER_CLK           | N/A                   | Target: 24.00 MHz  | 
+Clock: CyPLL_OUT              | N/A                   | Target: 24.00 MHz  | 
+
+ =====================================================================
+                    End of Clock Frequency Summary
+ #####################################################################
+
+
+ #####################################################################
+                    2::Clock Relationship Summary
+ =====================================================================
+
+Launch Clock           Capture Clock          Constraint(R-R)  Slack(R-R)  Constraint(R-F)  Slack(R-F)  Constraint(F-F)  Slack(F-F)  Constraint(F-R)  Slack(F-R)  
+---------------------  ---------------------  ---------------  ----------  ---------------  ----------  ---------------  ----------  ---------------  ----------  
+CapSense_CSD_IntClock  CapSense_CSD_IntClock  83333.3          66458       N/A              N/A         N/A              N/A         N/A              N/A         
+
+ =====================================================================
+                    End of Clock Relationship Summary
+ #####################################################################
+
+
+ #####################################################################
+                    3::Datasheet Report
+
+All values are in Picoseconds
+ =====================================================================
+
+3.1::Setup to Clock                     
+-------------------                     
+
+Port Name  Setup to Clk  Clock Name:Phase  
+---------  ------------  ----------------  
+
+
+-----------------------3.2::Clock to Out
+----------------------------------------
+
+Port Name  Clock to Out  Clock Name:Phase  
+---------  ------------  ----------------  
+
+
+-------------------------3.3::Pad to Pad
+----------------------------------------
+
+Port Name (Source)  Port Name (Destination)  Delay  
+------------------  -----------------------  -----  
+
+===================================================================== 
+                    End of Datasheet Report
+##################################################################### 
+##################################################################### 
+                    4::Path Details for Clock Frequency Summary
+===================================================================== 
+4.1::Critical Path Report for CapSense_CSD_IntClock
+***************************************************
+Clock: CapSense_CSD_IntClock
+Frequency: 59.26 MHz | Target: 12.00 MHz
+
+++++ Path 1 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/z1_comb
+Path End       : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/cs_addr_1
+Capture Clock  : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock
+Path slack     : 66458p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -6060
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             77273
+
+Launch Clock Arrival Time                       0
++ Clock path delay                          0
++ Data path delay                       10815
+-------------------------------------   ----- 
+End-of-path arrival time (ps)           10815
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock              datapathcell1       0      0  RISE       1
+
+Data path
+pin name                                           model name     delay     AT  slack  edge  Fanout
+-------------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/z1_comb    datapathcell1   2220   2220  66458  RISE       1
+\CapSense_CSD:MeasureCH0:cs_addr_win_1\/main_1     macrocell2      2925   5145  66458  RISE       1
+\CapSense_CSD:MeasureCH0:cs_addr_win_1\/q          macrocell2      3350   8495  66458  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/cs_addr_1  datapathcell1   2320  10815  66458  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock              datapathcell1       0      0  RISE       1
+
+
+
+===================================================================== 
+                    End of Path Details for Clock Frequency Summary
+##################################################################### 
+
+
+##################################################################### 
+                    5::Path Details for Clock Relationship Summary
+===================================================================== 
+
+5.1::Critical Path Report for (CapSense_CSD_IntClock:R vs. CapSense_CSD_IntClock:R)
+***********************************************************************************
+
+++++ Path 1 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/z1_comb
+Path End       : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/cs_addr_1
+Capture Clock  : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock
+Path slack     : 66458p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -6060
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             77273
+
+Launch Clock Arrival Time                       0
++ Clock path delay                          0
++ Data path delay                       10815
+-------------------------------------   ----- 
+End-of-path arrival time (ps)           10815
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock              datapathcell1       0      0  RISE       1
+
+Data path
+pin name                                           model name     delay     AT  slack  edge  Fanout
+-------------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/z1_comb    datapathcell1   2220   2220  66458  RISE       1
+\CapSense_CSD:MeasureCH0:cs_addr_win_1\/main_1     macrocell2      2925   5145  66458  RISE       1
+\CapSense_CSD:MeasureCH0:cs_addr_win_1\/q          macrocell2      3350   8495  66458  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/cs_addr_1  datapathcell1   2320  10815  66458  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock              datapathcell1       0      0  RISE       1
+
+
+
+===================================================================== 
+                    End of Path Details for Clock Relationship Summary
+##################################################################### 
+
+##################################################################### 
+                    Detailed Report for all timing paths 
+===================================================================== 
+
+++++ Path 1 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/z1_comb
+Path End       : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/cs_addr_1
+Capture Clock  : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock
+Path slack     : 66458p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -6060
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             77273
+
+Launch Clock Arrival Time                       0
++ Clock path delay                          0
++ Data path delay                       10815
+-------------------------------------   ----- 
+End-of-path arrival time (ps)           10815
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock              datapathcell1       0      0  RISE       1
+
+Data path
+pin name                                           model name     delay     AT  slack  edge  Fanout
+-------------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/z1_comb    datapathcell1   2220   2220  66458  RISE       1
+\CapSense_CSD:MeasureCH0:cs_addr_win_1\/main_1     macrocell2      2925   5145  66458  RISE       1
+\CapSense_CSD:MeasureCH0:cs_addr_win_1\/q          macrocell2      3350   8495  66458  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/cs_addr_1  datapathcell1   2320  10815  66458  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock              datapathcell1       0      0  RISE       1
+
+
+
+++++ Path 2 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/z1_comb
+Path End       : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/cs_addr_0
+Capture Clock  : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock
+Path slack     : 66466p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -6060
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             77273
+
+Launch Clock Arrival Time                       0
++ Clock path delay                          0
++ Data path delay                       10807
+-------------------------------------   ----- 
+End-of-path arrival time (ps)           10807
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock              datapathcell1       0      0  RISE       1
+
+Data path
+pin name                                           model name     delay     AT  slack  edge  Fanout
+-------------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/z1_comb    datapathcell1   2220   2220  66458  RISE       1
+\CapSense_CSD:MeasureCH0:cs_addr_win_0\/main_1     macrocell3      2925   5145  66466  RISE       1
+\CapSense_CSD:MeasureCH0:cs_addr_win_0\/q          macrocell3      3350   8495  66466  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/cs_addr_0  datapathcell1   2313  10807  66466  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock              datapathcell1       0      0  RISE       1
+
+
+
+++++ Path 3 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/z1_comb
+Path End       : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/cs_addr_2
+Capture Clock  : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock
+Path slack     : 66470p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -6060
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             77273
+
+Launch Clock Arrival Time                       0
++ Clock path delay                          0
++ Data path delay                       10804
+-------------------------------------   ----- 
+End-of-path arrival time (ps)           10804
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock              datapathcell1       0      0  RISE       1
+
+Data path
+pin name                                           model name     delay     AT  slack  edge  Fanout
+-------------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/z1_comb    datapathcell1   2220   2220  66458  RISE       1
+\CapSense_CSD:MeasureCH0:cs_addr_win_2\/main_1     macrocell1      2925   5145  66470  RISE       1
+\CapSense_CSD:MeasureCH0:cs_addr_win_2\/q          macrocell1      3350   8495  66470  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/cs_addr_2  datapathcell1   2309  10804  66470  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock              datapathcell1       0      0  RISE       1
+
+
+
+++++ Path 4 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/z1_comb
+Path End       : \CapSense_CSD:MeasureCH0:UDB:Counter:u0\/cs_addr_1
+Capture Clock  : \CapSense_CSD:MeasureCH0:UDB:Counter:u0\/clock
+Path slack     : 66488p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -6060
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             77273
+
+Launch Clock Arrival Time                       0
++ Clock path delay                          0
++ Data path delay                       10786
+-------------------------------------   ----- 
+End-of-path arrival time (ps)           10786
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock              datapathcell1       0      0  RISE       1
+
+Data path
+pin name                                            model name     delay     AT  slack  edge  Fanout
+--------------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/z1_comb     datapathcell1   2220   2220  66458  RISE       1
+\CapSense_CSD:MeasureCH0:cs_addr_cnt_1\/main_2      macrocell5      2919   5139  66488  RISE       1
+\CapSense_CSD:MeasureCH0:cs_addr_cnt_1\/q           macrocell5      3350   8489  66488  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Counter:u0\/cs_addr_1  datapathcell2   2296  10786  66488  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Counter:u0\/clock             datapathcell2       0      0  RISE       1
+
+
+
+++++ Path 5 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/z1_comb
+Path End       : \CapSense_CSD:MeasureCH0:UDB:Counter:u0\/cs_addr_2
+Capture Clock  : \CapSense_CSD:MeasureCH0:UDB:Counter:u0\/clock
+Path slack     : 66490p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -6060
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             77273
+
+Launch Clock Arrival Time                       0
++ Clock path delay                          0
++ Data path delay                       10783
+-------------------------------------   ----- 
+End-of-path arrival time (ps)           10783
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock              datapathcell1       0      0  RISE       1
+
+Data path
+pin name                                            model name     delay     AT  slack  edge  Fanout
+--------------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/z1_comb     datapathcell1   2220   2220  66458  RISE       1
+\CapSense_CSD:MeasureCH0:cs_addr_cnt_2\/main_2      macrocell4      2919   5139  66490  RISE       1
+\CapSense_CSD:MeasureCH0:cs_addr_cnt_2\/q           macrocell4      3350   8489  66490  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Counter:u0\/cs_addr_2  datapathcell2   2294  10783  66490  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Counter:u0\/clock             datapathcell2       0      0  RISE       1
+
+
+
+++++ Path 6 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/z1_comb
+Path End       : \CapSense_CSD:MeasureCH0:UDB:Counter:u0\/cs_addr_0
+Capture Clock  : \CapSense_CSD:MeasureCH0:UDB:Counter:u0\/clock
+Path slack     : 66492p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -6060
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             77273
+
+Launch Clock Arrival Time                       0
++ Clock path delay                          0
++ Data path delay                       10781
+-------------------------------------   ----- 
+End-of-path arrival time (ps)           10781
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock              datapathcell1       0      0  RISE       1
+
+Data path
+pin name                                            model name     delay     AT  slack  edge  Fanout
+--------------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/z1_comb     datapathcell1   2220   2220  66458  RISE       1
+\CapSense_CSD:MeasureCH0:cs_addr_cnt_0\/main_2      macrocell6      2919   5139  66492  RISE       1
+\CapSense_CSD:MeasureCH0:cs_addr_cnt_0\/q           macrocell6      3350   8489  66492  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Counter:u0\/cs_addr_0  datapathcell2   2292  10781  66492  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Counter:u0\/clock             datapathcell2       0      0  RISE       1
+
+
+
+++++ Path 7 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:inter_reset\/q
+Path End       : \CapSense_CSD:ClockGen:sC16:PRSdp:u1\/sir
+Capture Clock  : \CapSense_CSD:ClockGen:sC16:PRSdp:u1\/clock
+Path slack     : 67871p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3020
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             80313
+
+Launch Clock Arrival Time                       0
++ Clock path delay                          0
++ Data path delay                       12442
+-------------------------------------   ----- 
+End-of-path arrival time (ps)           12442
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:inter_reset\/clock_0                macrocell17         0      0  RISE       1
+
+Data path
+pin name                                         model name     delay     AT  slack  edge  Fanout
+-----------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:inter_reset\/q            macrocell17     1250   1250  67871  RISE       1
+\CapSense_CSD:ClockGen:sC16:PRSdp:u0\/cs_addr_2  datapathcell4   4232   5482  67871  RISE       1
+\CapSense_CSD:ClockGen:sC16:PRSdp:u0\/sol_msb    datapathcell4   6960  12442  67871  RISE       1
+\CapSense_CSD:ClockGen:sC16:PRSdp:u1\/sir        datapathcell5      0  12442  67871  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:sC16:PRSdp:u1\/clock                datapathcell5       0      0  RISE       1
+
+
+
+++++ Path 8 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:inter_reset\/q
+Path End       : \CapSense_CSD:ClockGen:sC16:PRSdp:u1\/cfbi
+Capture Clock  : \CapSense_CSD:ClockGen:sC16:PRSdp:u1\/clock
+Path slack     : 68511p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -5890
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             77443
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       8932
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           8932
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:inter_reset\/clock_0                macrocell17         0      0  RISE       1
+
+Data path
+pin name                                         model name     delay     AT  slack  edge  Fanout
+-----------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:inter_reset\/q            macrocell17     1250   1250  67871  RISE       1
+\CapSense_CSD:ClockGen:sC16:PRSdp:u0\/cs_addr_2  datapathcell4   4232   5482  67871  RISE       1
+\CapSense_CSD:ClockGen:sC16:PRSdp:u0\/cfbo       datapathcell4   3450   8932  68511  RISE       1
+\CapSense_CSD:ClockGen:sC16:PRSdp:u1\/cfbi       datapathcell5      0   8932  68511  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:sC16:PRSdp:u1\/clock                datapathcell5       0      0  RISE       1
+
+
+
+++++ Path 9 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:inter_reset\/q
+Path End       : \CapSense_CSD:ClockGen:sC16:PRSdp:u1\/cs_addr_2
+Capture Clock  : \CapSense_CSD:ClockGen:sC16:PRSdp:u1\/clock
+Path slack     : 69155p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -8130
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             75203
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       6048
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           6048
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:inter_reset\/clock_0                macrocell17         0      0  RISE       1
+
+Data path
+pin name                                         model name     delay     AT  slack  edge  Fanout
+-----------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:inter_reset\/q            macrocell17     1250   1250  67871  RISE       1
+\CapSense_CSD:ClockGen:sC16:PRSdp:u1\/cs_addr_2  datapathcell5   4798   6048  69155  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:sC16:PRSdp:u1\/clock                datapathcell5       0      0  RISE       1
+
+
+
+++++ Path 10 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:inter_reset\/q
+Path End       : \CapSense_CSD:ClockGen:sC16:PRSdp:u0\/cs_addr_2
+Capture Clock  : \CapSense_CSD:ClockGen:sC16:PRSdp:u0\/clock
+Path slack     : 69721p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -8130
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             75203
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       5482
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           5482
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:inter_reset\/clock_0                macrocell17         0      0  RISE       1
+
+Data path
+pin name                                         model name     delay     AT  slack  edge  Fanout
+-----------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:inter_reset\/q            macrocell17     1250   1250  67871  RISE       1
+\CapSense_CSD:ClockGen:sC16:PRSdp:u0\/cs_addr_2  datapathcell4   4232   5482  69721  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:sC16:PRSdp:u0\/clock                datapathcell4       0      0  RISE       1
+
+
+
+++++ Path 11 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:inter_reset\/q
+Path End       : \CapSense_CSD:ClockGen:UDB:PrescalerDp:u0\/cs_addr_0
+Capture Clock  : \CapSense_CSD:ClockGen:UDB:PrescalerDp:u0\/clock
+Path slack     : 70139p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -6060
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             77273
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       7135
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           7135
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:inter_reset\/clock_0                macrocell17         0      0  RISE       1
+
+Data path
+pin name                                              model name     delay     AT  slack  edge  Fanout
+----------------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:inter_reset\/q                 macrocell17     1250   1250  67871  RISE       1
+\CapSense_CSD:ClockGen:UDB:PrescalerDp:u0\/cs_addr_0  datapathcell3   5885   7135  70139  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:UDB:PrescalerDp:u0\/clock           datapathcell3       0      0  RISE       1
+
+
+
+++++ Path 12 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:clock_detect_reg\/q
+Path End       : \CapSense_CSD:ClockGen:sC16:PRSdp:u0\/cs_addr_0
+Capture Clock  : \CapSense_CSD:ClockGen:sC16:PRSdp:u0\/clock
+Path slack     : 71633p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -8130
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             75203
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       3570
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           3570
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:clock_detect_reg\/clock_0           macrocell12         0      0  RISE       1
+
+Data path
+pin name                                         model name     delay     AT  slack  edge  Fanout
+-----------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:clock_detect_reg\/q       macrocell12     1250   1250  69783  RISE       1
+\CapSense_CSD:ClockGen:sC16:PRSdp:u0\/cs_addr_0  datapathcell4   2320   3570  71633  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:sC16:PRSdp:u0\/clock                datapathcell4       0      0  RISE       1
+
+
+
+++++ Path 13 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:clock_detect_reg\/q
+Path End       : \CapSense_CSD:ClockGen:sC16:PRSdp:u1\/cs_addr_0
+Capture Clock  : \CapSense_CSD:ClockGen:sC16:PRSdp:u1\/clock
+Path slack     : 71641p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -8130
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             75203
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       3563
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           3563
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:clock_detect_reg\/clock_0           macrocell12         0      0  RISE       1
+
+Data path
+pin name                                         model name     delay     AT  slack  edge  Fanout
+-----------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:clock_detect_reg\/q       macrocell12     1250   1250  69783  RISE       1
+\CapSense_CSD:ClockGen:sC16:PRSdp:u1\/cs_addr_0  datapathcell5   2313   3563  71641  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:sC16:PRSdp:u1\/clock                datapathcell5       0      0  RISE       1
+
+
+
+++++ Path 14 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:inter_reset\/q
+Path End       : \CapSense_CSD:ClockGen:cstate_2\/main_3
+Capture Clock  : \CapSense_CSD:ClockGen:cstate_2\/clock_0
+Path slack     : 72680p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       7143
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           7143
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:inter_reset\/clock_0                macrocell17         0      0  RISE       1
+
+Data path
+pin name                                 model name   delay     AT  slack  edge  Fanout
+---------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:inter_reset\/q    macrocell17   1250   1250  67871  RISE       1
+\CapSense_CSD:ClockGen:cstate_2\/main_3  macrocell15   5893   7143  72680  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:cstate_2\/clock_0                   macrocell15         0      0  RISE       1
+
+
+
+++++ Path 15 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:UDB:PrescalerDp:u0\/z0_comb
+Path End       : \CapSense_CSD:ClockGen:UDB:PrescalerDp:u0\/cs_addr_1
+Capture Clock  : \CapSense_CSD:ClockGen:UDB:PrescalerDp:u0\/clock
+Path slack     : 72699p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -6060
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             77273
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4575
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4575
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:UDB:PrescalerDp:u0\/clock           datapathcell3       0      0  RISE       1
+
+Data path
+pin name                                              model name     delay     AT  slack  edge  Fanout
+----------------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:UDB:PrescalerDp:u0\/z0_comb    datapathcell3   2290   2290  72699  RISE       1
+\CapSense_CSD:ClockGen:UDB:PrescalerDp:u0\/cs_addr_1  datapathcell3   2285   4575  72699  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:UDB:PrescalerDp:u0\/clock           datapathcell3       0      0  RISE       1
+
+
+
+++++ Path 16 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:ScanSpeed\/tc
+Path End       : \CapSense_CSD:MeasureCH0:wndState_2\/main_0
+Capture Clock  : \CapSense_CSD:MeasureCH0:wndState_2\/clock_0
+Path slack     : 73034p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       6789
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           6789
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:ScanSpeed\/clock                    count7cell          0      0  RISE       1
+
+Data path
+pin name                                     model name   delay     AT  slack  edge  Fanout
+-------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:ScanSpeed\/tc         count7cell    2050   2050  73034  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_2\/main_0  macrocell9    4739   6789  73034  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_2\/clock_0               macrocell9          0      0  RISE       1
+
+
+
+++++ Path 17 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:inter_reset\/q
+Path End       : \CapSense_CSD:mrst\/main_2
+Capture Clock  : \CapSense_CSD:mrst\/clock_0
+Path slack     : 73556p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       6268
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           6268
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:inter_reset\/clock_0                macrocell17         0      0  RISE       1
+
+Data path
+pin name                               model name   delay     AT  slack  edge  Fanout
+-------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:inter_reset\/q  macrocell17   1250   1250  67871  RISE       1
+\CapSense_CSD:mrst\/main_2             macrocell16   5018   6268  73556  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:mrst\/clock_0                                macrocell16         0      0  RISE       1
+
+
+
+++++ Path 18 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:cstate_2\/q
+Path End       : \CapSense_CSD:MeasureCH0:wndState_0\/main_6
+Capture Clock  : \CapSense_CSD:MeasureCH0:wndState_0\/clock_0
+Path slack     : 73795p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       6028
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           6028
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:cstate_2\/clock_0                   macrocell15         0      0  RISE       1
+
+Data path
+pin name                                     model name   delay     AT  slack  edge  Fanout
+-------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:cstate_2\/q           macrocell15   1250   1250  73795  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_0\/main_6  macrocell11   4778   6028  73795  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_0\/clock_0               macrocell11         0      0  RISE       1
+
+
+
+++++ Path 19 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:ScanSpeed\/tc
+Path End       : \CapSense_CSD:MeasureCH0:genblk1:SyncCMPR\/clk_en
+Capture Clock  : \CapSense_CSD:MeasureCH0:genblk1:SyncCMPR\/clock
+Path slack     : 73861p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -2100
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             81233
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       7372
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           7372
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:ScanSpeed\/clock                    count7cell          0      0  RISE       1
+
+Data path
+pin name                                           model name   delay     AT  slack  edge  Fanout
+-------------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:ScanSpeed\/tc               count7cell    2050   2050  73034  RISE       1
+\CapSense_CSD:MeasureCH0:genblk1:SyncCMPR\/clk_en  synccell      5322   7372  73861  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:genblk1:SyncCMPR\/clock           synccell            0      0  RISE       1
+
+
+
+++++ Path 20 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:mrst\/q
+Path End       : \CapSense_CSD:MeasureCH0:wndState_2\/main_1
+Capture Clock  : \CapSense_CSD:MeasureCH0:wndState_2\/clock_0
+Path slack     : 73974p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       5849
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           5849
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:mrst\/clock_0                                macrocell16         0      0  RISE       1
+
+Data path
+pin name                                     model name   delay     AT  slack  edge  Fanout
+-------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:mrst\/q                        macrocell16   1250   1250  73974  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_2\/main_1  macrocell9    4599   5849  73974  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_2\/clock_0               macrocell9          0      0  RISE       1
+
+
+
+++++ Path 21 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:mrst\/q
+Path End       : \CapSense_CSD:MeasureCH0:wndState_0\/main_0
+Capture Clock  : \CapSense_CSD:MeasureCH0:wndState_0\/clock_0
+Path slack     : 73974p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       5849
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           5849
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:mrst\/clock_0                                macrocell16         0      0  RISE       1
+
+Data path
+pin name                                     model name   delay     AT  slack  edge  Fanout
+-------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:mrst\/q                        macrocell16   1250   1250  73974  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_0\/main_0  macrocell11   4599   5849  73974  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_0\/clock_0               macrocell11         0      0  RISE       1
+
+
+
+++++ Path 22 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/z0_comb
+Path End       : \CapSense_CSD:Net_1603\/main_0
+Capture Clock  : \CapSense_CSD:Net_1603\/clock_0
+Path slack     : 74001p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       5822
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           5822
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock              datapathcell1       0      0  RISE       1
+
+Data path
+pin name                                         model name     delay     AT  slack  edge  Fanout
+-----------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/z0_comb  datapathcell1   2290   2290  66700  RISE       1
+\CapSense_CSD:Net_1603\/main_0                   macrocell8      3532   5822  74001  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:Net_1603\/clock_0                            macrocell8          0      0  RISE       1
+
+
+
+++++ Path 23 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/z0_comb
+Path End       : \CapSense_CSD:MeasureCH0:wndState_1\/main_1
+Capture Clock  : \CapSense_CSD:MeasureCH0:wndState_1\/clock_0
+Path slack     : 74001p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       5822
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           5822
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock              datapathcell1       0      0  RISE       1
+
+Data path
+pin name                                         model name     delay     AT  slack  edge  Fanout
+-----------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/z0_comb  datapathcell1   2290   2290  66700  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_1\/main_1      macrocell10     3532   5822  74001  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_1\/clock_0               macrocell10         0      0  RISE       1
+
+
+
+++++ Path 24 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/z1_comb
+Path End       : \CapSense_CSD:Net_1603\/main_1
+Capture Clock  : \CapSense_CSD:Net_1603\/clock_0
+Path slack     : 74041p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       5782
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           5782
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock              datapathcell1       0      0  RISE       1
+
+Data path
+pin name                                         model name     delay     AT  slack  edge  Fanout
+-----------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/z1_comb  datapathcell1   2220   2220  66458  RISE       1
+\CapSense_CSD:Net_1603\/main_1                   macrocell8      3562   5782  74041  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:Net_1603\/clock_0                            macrocell8          0      0  RISE       1
+
+
+
+++++ Path 25 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:UDB:Window:u0\/z1_comb
+Path End       : \CapSense_CSD:MeasureCH0:wndState_1\/main_2
+Capture Clock  : \CapSense_CSD:MeasureCH0:wndState_1\/clock_0
+Path slack     : 74041p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       5782
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           5782
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/clock              datapathcell1       0      0  RISE       1
+
+Data path
+pin name                                         model name     delay     AT  slack  edge  Fanout
+-----------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:UDB:Window:u0\/z1_comb  datapathcell1   2220   2220  66458  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_1\/main_2      macrocell10     3562   5782  74041  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_1\/clock_0               macrocell10         0      0  RISE       1
+
+
+
+++++ Path 26 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:Net_1603\/q
+Path End       : \CapSense_CSD:MeasureCH0:wndState_2\/main_5
+Capture Clock  : \CapSense_CSD:MeasureCH0:wndState_2\/clock_0
+Path slack     : 74354p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       5470
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           5470
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:Net_1603\/clock_0                            macrocell8          0      0  RISE       1
+
+Data path
+pin name                                     model name   delay     AT  slack  edge  Fanout
+-------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:Net_1603\/q                    macrocell8    1250   1250  74354  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_2\/main_5  macrocell9    4220   5470  74354  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_2\/clock_0               macrocell9          0      0  RISE       1
+
+
+
+++++ Path 27 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:Net_1603\/q
+Path End       : \CapSense_CSD:MeasureCH0:wndState_0\/main_4
+Capture Clock  : \CapSense_CSD:MeasureCH0:wndState_0\/clock_0
+Path slack     : 74354p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       5470
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           5470
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:Net_1603\/clock_0                            macrocell8          0      0  RISE       1
+
+Data path
+pin name                                     model name   delay     AT  slack  edge  Fanout
+-------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:Net_1603\/q                    macrocell8    1250   1250  74354  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_0\/main_4  macrocell11   4220   5470  74354  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_0\/clock_0               macrocell11         0      0  RISE       1
+
+
+
+++++ Path 28 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:wndState_2\/q
+Path End       : \CapSense_CSD:Net_1603\/main_3
+Capture Clock  : \CapSense_CSD:Net_1603\/clock_0
+Path slack     : 74397p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       5426
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           5426
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_2\/clock_0               macrocell9          0      0  RISE       1
+
+Data path
+pin name                                model name   delay     AT  slack  edge  Fanout
+--------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:wndState_2\/q  macrocell9    1250   1250  67068  RISE       1
+\CapSense_CSD:Net_1603\/main_3          macrocell8    4176   5426  74397  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:Net_1603\/clock_0                            macrocell8          0      0  RISE       1
+
+
+
+++++ Path 29 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:wndState_2\/q
+Path End       : \CapSense_CSD:MeasureCH0:wndState_1\/main_4
+Capture Clock  : \CapSense_CSD:MeasureCH0:wndState_1\/clock_0
+Path slack     : 74397p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       5426
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           5426
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_2\/clock_0               macrocell9          0      0  RISE       1
+
+Data path
+pin name                                     model name   delay     AT  slack  edge  Fanout
+-------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:wndState_2\/q       macrocell9    1250   1250  67068  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_1\/main_4  macrocell10   4176   5426  74397  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_1\/clock_0               macrocell10         0      0  RISE       1
+
+
+
+++++ Path 30 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:cstate_2\/q
+Path End       : \CapSense_CSD:Net_1603\/main_8
+Capture Clock  : \CapSense_CSD:Net_1603\/clock_0
+Path slack     : 74694p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       5129
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           5129
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:cstate_2\/clock_0                   macrocell15         0      0  RISE       1
+
+Data path
+pin name                            model name   delay     AT  slack  edge  Fanout
+----------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:cstate_2\/q  macrocell15   1250   1250  73795  RISE       1
+\CapSense_CSD:Net_1603\/main_8      macrocell8    3879   5129  74694  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:Net_1603\/clock_0                            macrocell8          0      0  RISE       1
+
+
+
+++++ Path 31 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:wndState_0\/q
+Path End       : \CapSense_CSD:Net_1603\/main_5
+Capture Clock  : \CapSense_CSD:Net_1603\/clock_0
+Path slack     : 74705p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       5118
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           5118
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_0\/clock_0               macrocell11         0      0  RISE       1
+
+Data path
+pin name                                model name   delay     AT  slack  edge  Fanout
+--------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:wndState_0\/q  macrocell11   1250   1250  67270  RISE       1
+\CapSense_CSD:Net_1603\/main_5          macrocell8    3868   5118  74705  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:Net_1603\/clock_0                            macrocell8          0      0  RISE       1
+
+
+
+++++ Path 32 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:wndState_0\/q
+Path End       : \CapSense_CSD:MeasureCH0:wndState_1\/main_6
+Capture Clock  : \CapSense_CSD:MeasureCH0:wndState_1\/clock_0
+Path slack     : 74705p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       5118
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           5118
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_0\/clock_0               macrocell11         0      0  RISE       1
+
+Data path
+pin name                                     model name   delay     AT  slack  edge  Fanout
+-------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:wndState_0\/q       macrocell11   1250   1250  67270  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_1\/main_6  macrocell10   3868   5118  74705  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_1\/clock_0               macrocell10         0      0  RISE       1
+
+
+
+++++ Path 33 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:cstate_2\/q
+Path End       : \CapSense_CSD:ClockGen:inter_reset\/main_3
+Capture Clock  : \CapSense_CSD:ClockGen:inter_reset\/clock_0
+Path slack     : 74710p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       5113
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           5113
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:cstate_2\/clock_0                   macrocell15         0      0  RISE       1
+
+Data path
+pin name                                    model name   delay     AT  slack  edge  Fanout
+------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:cstate_2\/q          macrocell15   1250   1250  73795  RISE       1
+\CapSense_CSD:ClockGen:inter_reset\/main_3  macrocell17   3863   5113  74710  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:inter_reset\/clock_0                macrocell17         0      0  RISE       1
+
+
+
+++++ Path 34 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:inter_reset\/q
+Path End       : \CapSense_CSD:ClockGen:inter_reset\/main_2
+Capture Clock  : \CapSense_CSD:ClockGen:inter_reset\/clock_0
+Path slack     : 74782p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       5041
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           5041
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:inter_reset\/clock_0                macrocell17         0      0  RISE       1
+
+Data path
+pin name                                    model name   delay     AT  slack  edge  Fanout
+------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:inter_reset\/q       macrocell17   1250   1250  67871  RISE       1
+\CapSense_CSD:ClockGen:inter_reset\/main_2  macrocell17   3791   5041  74782  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:inter_reset\/clock_0                macrocell17         0      0  RISE       1
+
+
+
+++++ Path 35 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:ScanSpeed\/tc
+Path End       : \CapSense_CSD:MeasureCH0:wndState_1\/main_0
+Capture Clock  : \CapSense_CSD:MeasureCH0:wndState_1\/clock_0
+Path slack     : 74854p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4969
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4969
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:ScanSpeed\/clock                    count7cell          0      0  RISE       1
+
+Data path
+pin name                                     model name   delay     AT  slack  edge  Fanout
+-------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:ScanSpeed\/tc         count7cell    2050   2050  73034  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_1\/main_0  macrocell10   2919   4969  74854  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_1\/clock_0               macrocell10         0      0  RISE       1
+
+
+
+++++ Path 36 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:mrst\/q
+Path End       : \CapSense_CSD:Net_1603\/main_2
+Capture Clock  : \CapSense_CSD:Net_1603\/clock_0
+Path slack     : 74873p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4950
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4950
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:mrst\/clock_0                                macrocell16         0      0  RISE       1
+
+Data path
+pin name                        model name   delay     AT  slack  edge  Fanout
+------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:mrst\/q           macrocell16   1250   1250  73974  RISE       1
+\CapSense_CSD:Net_1603\/main_2  macrocell8    3700   4950  74873  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:Net_1603\/clock_0                            macrocell8          0      0  RISE       1
+
+
+
+++++ Path 37 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:mrst\/q
+Path End       : \CapSense_CSD:MeasureCH0:wndState_1\/main_3
+Capture Clock  : \CapSense_CSD:MeasureCH0:wndState_1\/clock_0
+Path slack     : 74873p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4950
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4950
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:mrst\/clock_0                                macrocell16         0      0  RISE       1
+
+Data path
+pin name                                     model name   delay     AT  slack  edge  Fanout
+-------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:mrst\/q                        macrocell16   1250   1250  73974  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_1\/main_3  macrocell10   3700   4950  74873  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_1\/clock_0               macrocell10         0      0  RISE       1
+
+
+
+++++ Path 38 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:mrst\/q
+Path End       : \CapSense_CSD:ClockGen:inter_reset\/main_0
+Capture Clock  : \CapSense_CSD:ClockGen:inter_reset\/clock_0
+Path slack     : 74884p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4940
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4940
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:mrst\/clock_0                                macrocell16         0      0  RISE       1
+
+Data path
+pin name                                    model name   delay     AT  slack  edge  Fanout
+------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:mrst\/q                       macrocell16   1250   1250  73974  RISE       1
+\CapSense_CSD:ClockGen:inter_reset\/main_0  macrocell17   3690   4940  74884  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:inter_reset\/clock_0                macrocell17         0      0  RISE       1
+
+
+
+++++ Path 39 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:sC16:PRSdp:u1\/cmsbo
+Path End       : \CapSense_CSD:ClockGen:sC16:PRSdp:u0\/cmsbi
+Capture Clock  : \CapSense_CSD:ClockGen:sC16:PRSdp:u0\/clock
+Path slack     : 75063p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -6730
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             76603
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       1540
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           1540
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:sC16:PRSdp:u1\/clock                datapathcell5       0      0  RISE       1
+
+Data path
+pin name                                     model name     delay     AT  slack  edge  Fanout
+-------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:sC16:PRSdp:u1\/cmsbo  datapathcell5   1540   1540  73213  RISE       1
+\CapSense_CSD:ClockGen:sC16:PRSdp:u0\/cmsbi  datapathcell4      0   1540  75063  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:sC16:PRSdp:u0\/clock                datapathcell4       0      0  RISE       1
+
+
+
+++++ Path 40 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:UDB:PrescalerDp:u0\/ce1_comb
+Path End       : \CapSense_CSD:ClockGen:tmp_ppulse_reg\/main_0
+Capture Clock  : \CapSense_CSD:ClockGen:tmp_ppulse_reg\/clock_0
+Path slack     : 75104p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4719
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4719
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:UDB:PrescalerDp:u0\/clock           datapathcell3       0      0  RISE       1
+
+Data path
+pin name                                             model name     delay     AT  slack  edge  Fanout
+---------------------------------------------------  -------------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:UDB:PrescalerDp:u0\/ce1_comb  datapathcell3   2430   2430  75104  RISE       1
+\CapSense_CSD:ClockGen:tmp_ppulse_reg\/main_0        macrocell13     2289   4719  75104  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:tmp_ppulse_reg\/clock_0             macrocell13         0      0  RISE       1
+
+
+
+++++ Path 41 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:wndState_2\/q
+Path End       : \CapSense_CSD:MeasureCH0:wndState_2\/main_2
+Capture Clock  : \CapSense_CSD:MeasureCH0:wndState_2\/clock_0
+Path slack     : 75282p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4541
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4541
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_2\/clock_0               macrocell9          0      0  RISE       1
+
+Data path
+pin name                                     model name   delay     AT  slack  edge  Fanout
+-------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:wndState_2\/q       macrocell9    1250   1250  67068  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_2\/main_2  macrocell9    3291   4541  75282  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_2\/clock_0               macrocell9          0      0  RISE       1
+
+
+
+++++ Path 42 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:wndState_2\/q
+Path End       : \CapSense_CSD:MeasureCH0:wndState_0\/main_1
+Capture Clock  : \CapSense_CSD:MeasureCH0:wndState_0\/clock_0
+Path slack     : 75282p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4541
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4541
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_2\/clock_0               macrocell9          0      0  RISE       1
+
+Data path
+pin name                                     model name   delay     AT  slack  edge  Fanout
+-------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:wndState_2\/q       macrocell9    1250   1250  67068  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_0\/main_1  macrocell11   3291   4541  75282  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_0\/clock_0               macrocell11         0      0  RISE       1
+
+
+
+++++ Path 43 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:tmp_ppulse_reg\/q
+Path End       : \CapSense_CSD:ClockGen:clock_detect_reg\/main_0
+Capture Clock  : \CapSense_CSD:ClockGen:clock_detect_reg\/clock_0
+Path slack     : 75350p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4473
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4473
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:tmp_ppulse_reg\/clock_0             macrocell13         0      0  RISE       1
+
+Data path
+pin name                                         model name   delay     AT  slack  edge  Fanout
+-----------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:tmp_ppulse_reg\/q         macrocell13   1250   1250  75350  RISE       1
+\CapSense_CSD:ClockGen:clock_detect_reg\/main_0  macrocell12   3223   4473  75350  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:clock_detect_reg\/clock_0           macrocell12         0      0  RISE       1
+
+
+
+++++ Path 44 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:SyncCtrl:CtrlReg\/control_1
+Path End       : \CapSense_CSD:mrst\/main_1
+Capture Clock  : \CapSense_CSD:mrst\/clock_0
+Path slack     : 75364p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4459
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4459
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:SyncCtrl:CtrlReg\/clock             controlcell1        0      0  RISE       1
+
+Data path
+pin name                                            model name    delay     AT  slack  edge  Fanout
+--------------------------------------------------  ------------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:SyncCtrl:CtrlReg\/control_1  controlcell1   1210   1210  75364  RISE       1
+\CapSense_CSD:mrst\/main_1                          macrocell16    3249   4459  75364  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:mrst\/clock_0                                macrocell16         0      0  RISE       1
+
+
+
+++++ Path 45 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:wndState_1\/q
+Path End       : \CapSense_CSD:MeasureCH0:wndState_2\/main_3
+Capture Clock  : \CapSense_CSD:MeasureCH0:wndState_2\/clock_0
+Path slack     : 75366p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4457
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4457
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_1\/clock_0               macrocell10         0      0  RISE       1
+
+Data path
+pin name                                     model name   delay     AT  slack  edge  Fanout
+-------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:wndState_1\/q       macrocell10   1250   1250  75366  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_2\/main_3  macrocell9    3207   4457  75366  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_2\/clock_0               macrocell9          0      0  RISE       1
+
+
+
+++++ Path 46 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:wndState_1\/q
+Path End       : \CapSense_CSD:MeasureCH0:wndState_0\/main_2
+Capture Clock  : \CapSense_CSD:MeasureCH0:wndState_0\/clock_0
+Path slack     : 75366p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4457
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4457
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_1\/clock_0               macrocell10         0      0  RISE       1
+
+Data path
+pin name                                     model name   delay     AT  slack  edge  Fanout
+-------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:wndState_1\/q       macrocell10   1250   1250  75366  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_0\/main_2  macrocell11   3207   4457  75366  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_0\/clock_0               macrocell11         0      0  RISE       1
+
+
+
+++++ Path 47 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:SyncCtrl:CtrlReg\/control_1
+Path End       : \CapSense_CSD:ClockGen:cstate_2\/main_1
+Capture Clock  : \CapSense_CSD:ClockGen:cstate_2\/clock_0
+Path slack     : 75368p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4455
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4455
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:SyncCtrl:CtrlReg\/clock             controlcell1        0      0  RISE       1
+
+Data path
+pin name                                            model name    delay     AT  slack  edge  Fanout
+--------------------------------------------------  ------------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:SyncCtrl:CtrlReg\/control_1  controlcell1   1210   1210  75364  RISE       1
+\CapSense_CSD:ClockGen:cstate_2\/main_1             macrocell15    3245   4455  75368  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:cstate_2\/clock_0                   macrocell15         0      0  RISE       1
+
+
+
+++++ Path 48 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:SyncCtrl:CtrlReg\/control_0
+Path End       : \CapSense_CSD:ClockGen:cstate_2\/main_2
+Capture Clock  : \CapSense_CSD:ClockGen:cstate_2\/clock_0
+Path slack     : 75377p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4446
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4446
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:SyncCtrl:CtrlReg\/clock             controlcell1        0      0  RISE       1
+
+Data path
+pin name                                            model name    delay     AT  slack  edge  Fanout
+--------------------------------------------------  ------------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:SyncCtrl:CtrlReg\/control_0  controlcell1   1210   1210  75377  RISE       1
+\CapSense_CSD:ClockGen:cstate_2\/main_2             macrocell15    3236   4446  75377  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:cstate_2\/clock_0                   macrocell15         0      0  RISE       1
+
+
+
+++++ Path 49 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:SyncCtrl:CtrlReg\/control_2
+Path End       : \CapSense_CSD:MeasureCH0:wndState_0\/main_5
+Capture Clock  : \CapSense_CSD:MeasureCH0:wndState_0\/clock_0
+Path slack     : 75437p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4386
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4386
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:SyncCtrl:CtrlReg\/clock             controlcell1        0      0  RISE       1
+
+Data path
+pin name                                            model name    delay     AT  slack  edge  Fanout
+--------------------------------------------------  ------------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:SyncCtrl:CtrlReg\/control_2  controlcell1   1210   1210  75437  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_0\/main_5         macrocell11    3176   4386  75437  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_0\/clock_0               macrocell11         0      0  RISE       1
+
+
+
+++++ Path 50 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:wndState_0\/q
+Path End       : \CapSense_CSD:MeasureCH0:wndState_2\/main_4
+Capture Clock  : \CapSense_CSD:MeasureCH0:wndState_2\/clock_0
+Path slack     : 75621p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4203
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4203
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_0\/clock_0               macrocell11         0      0  RISE       1
+
+Data path
+pin name                                     model name   delay     AT  slack  edge  Fanout
+-------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:wndState_0\/q       macrocell11   1250   1250  67270  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_2\/main_4  macrocell9    2953   4203  75621  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_2\/clock_0               macrocell9          0      0  RISE       1
+
+
+
+++++ Path 51 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:wndState_0\/q
+Path End       : \CapSense_CSD:MeasureCH0:wndState_0\/main_3
+Capture Clock  : \CapSense_CSD:MeasureCH0:wndState_0\/clock_0
+Path slack     : 75621p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4203
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4203
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_0\/clock_0               macrocell11         0      0  RISE       1
+
+Data path
+pin name                                     model name   delay     AT  slack  edge  Fanout
+-------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:wndState_0\/q       macrocell11   1250   1250  67270  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_0\/main_3  macrocell11   2953   4203  75621  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_0\/clock_0               macrocell11         0      0  RISE       1
+
+
+
+++++ Path 52 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:tmp_ppulse_reg\/q
+Path End       : \CapSense_CSD:ClockGen:tmp_ppulse_dly\/main_0
+Capture Clock  : \CapSense_CSD:ClockGen:tmp_ppulse_dly\/clock_0
+Path slack     : 75656p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4167
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4167
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:tmp_ppulse_reg\/clock_0             macrocell13         0      0  RISE       1
+
+Data path
+pin name                                       model name   delay     AT  slack  edge  Fanout
+---------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:tmp_ppulse_reg\/q       macrocell13   1250   1250  75350  RISE       1
+\CapSense_CSD:ClockGen:tmp_ppulse_dly\/main_0  macrocell14   2917   4167  75656  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:tmp_ppulse_dly\/clock_0             macrocell14         0      0  RISE       1
+
+
+
+++++ Path 53 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:cstate_2\/q
+Path End       : \CapSense_CSD:ClockGen:cstate_2\/main_4
+Capture Clock  : \CapSense_CSD:ClockGen:cstate_2\/clock_0
+Path slack     : 75771p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4052
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4052
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:cstate_2\/clock_0                   macrocell15         0      0  RISE       1
+
+Data path
+pin name                                 model name   delay     AT  slack  edge  Fanout
+---------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:cstate_2\/q       macrocell15   1250   1250  73795  RISE       1
+\CapSense_CSD:ClockGen:cstate_2\/main_4  macrocell15   2802   4052  75771  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:cstate_2\/clock_0                   macrocell15         0      0  RISE       1
+
+
+
+++++ Path 54 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:cstate_2\/q
+Path End       : \CapSense_CSD:mrst\/main_3
+Capture Clock  : \CapSense_CSD:mrst\/clock_0
+Path slack     : 75772p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4051
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4051
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:cstate_2\/clock_0                   macrocell15         0      0  RISE       1
+
+Data path
+pin name                            model name   delay     AT  slack  edge  Fanout
+----------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:cstate_2\/q  macrocell15   1250   1250  73795  RISE       1
+\CapSense_CSD:mrst\/main_3          macrocell16   2801   4051  75772  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:mrst\/clock_0                                macrocell16         0      0  RISE       1
+
+
+
+++++ Path 55 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:mrst\/q
+Path End       : \CapSense_CSD:mrst\/main_0
+Capture Clock  : \CapSense_CSD:mrst\/clock_0
+Path slack     : 75785p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4039
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4039
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:mrst\/clock_0                                macrocell16         0      0  RISE       1
+
+Data path
+pin name                    model name   delay     AT  slack  edge  Fanout
+--------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:mrst\/q       macrocell16   1250   1250  73974  RISE       1
+\CapSense_CSD:mrst\/main_0  macrocell16   2789   4039  75785  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:mrst\/clock_0                                macrocell16         0      0  RISE       1
+
+
+
+++++ Path 56 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:mrst\/q
+Path End       : \CapSense_CSD:ClockGen:cstate_2\/main_0
+Capture Clock  : \CapSense_CSD:ClockGen:cstate_2\/clock_0
+Path slack     : 75786p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       4037
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           4037
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:mrst\/clock_0                                macrocell16         0      0  RISE       1
+
+Data path
+pin name                                 model name   delay     AT  slack  edge  Fanout
+---------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:mrst\/q                    macrocell16   1250   1250  73974  RISE       1
+\CapSense_CSD:ClockGen:cstate_2\/main_0  macrocell15   2787   4037  75786  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:cstate_2\/clock_0                   macrocell15         0      0  RISE       1
+
+
+
+++++ Path 57 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:Net_1603\/q
+Path End       : \CapSense_CSD:Net_1603\/main_6
+Capture Clock  : \CapSense_CSD:Net_1603\/clock_0
+Path slack     : 75925p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       3898
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           3898
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:Net_1603\/clock_0                            macrocell8          0      0  RISE       1
+
+Data path
+pin name                        model name   delay     AT  slack  edge  Fanout
+------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:Net_1603\/q       macrocell8    1250   1250  74354  RISE       1
+\CapSense_CSD:Net_1603\/main_6  macrocell8    2648   3898  75925  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:Net_1603\/clock_0                            macrocell8          0      0  RISE       1
+
+
+
+++++ Path 58 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:Net_1603\/q
+Path End       : \CapSense_CSD:MeasureCH0:wndState_1\/main_7
+Capture Clock  : \CapSense_CSD:MeasureCH0:wndState_1\/clock_0
+Path slack     : 75925p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       3898
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           3898
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:Net_1603\/clock_0                            macrocell8          0      0  RISE       1
+
+Data path
+pin name                                     model name   delay     AT  slack  edge  Fanout
+-------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:Net_1603\/q                    macrocell8    1250   1250  74354  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_1\/main_7  macrocell10   2648   3898  75925  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_1\/clock_0               macrocell10         0      0  RISE       1
+
+
+
+++++ Path 59 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:wndState_1\/q
+Path End       : \CapSense_CSD:Net_1603\/main_4
+Capture Clock  : \CapSense_CSD:Net_1603\/clock_0
+Path slack     : 76269p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       3554
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           3554
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_1\/clock_0               macrocell10         0      0  RISE       1
+
+Data path
+pin name                                model name   delay     AT  slack  edge  Fanout
+--------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:wndState_1\/q  macrocell10   1250   1250  75366  RISE       1
+\CapSense_CSD:Net_1603\/main_4          macrocell8    2304   3554  76269  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:Net_1603\/clock_0                            macrocell8          0      0  RISE       1
+
+
+
+++++ Path 60 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:MeasureCH0:wndState_1\/q
+Path End       : \CapSense_CSD:MeasureCH0:wndState_1\/main_5
+Capture Clock  : \CapSense_CSD:MeasureCH0:wndState_1\/clock_0
+Path slack     : 76269p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       3554
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           3554
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_1\/clock_0               macrocell10         0      0  RISE       1
+
+Data path
+pin name                                     model name   delay     AT  slack  edge  Fanout
+-------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:MeasureCH0:wndState_1\/q       macrocell10   1250   1250  75366  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_1\/main_5  macrocell10   2304   3554  76269  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:MeasureCH0:wndState_1\/clock_0               macrocell10         0      0  RISE       1
+
+
+
+++++ Path 61 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:tmp_ppulse_dly\/q
+Path End       : \CapSense_CSD:ClockGen:clock_detect_reg\/main_1
+Capture Clock  : \CapSense_CSD:ClockGen:clock_detect_reg\/clock_0
+Path slack     : 76275p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       3549
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           3549
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:tmp_ppulse_dly\/clock_0             macrocell14         0      0  RISE       1
+
+Data path
+pin name                                         model name   delay     AT  slack  edge  Fanout
+-----------------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:tmp_ppulse_dly\/q         macrocell14   1250   1250  76275  RISE       1
+\CapSense_CSD:ClockGen:clock_detect_reg\/main_1  macrocell12   2299   3549  76275  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:clock_detect_reg\/clock_0           macrocell12         0      0  RISE       1
+
+
+
+++++ Path 62 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:SyncCtrl:CtrlReg\/control_0
+Path End       : \CapSense_CSD:ClockGen:inter_reset\/main_1
+Capture Clock  : \CapSense_CSD:ClockGen:inter_reset\/clock_0
+Path slack     : 76292p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       3531
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           3531
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:SyncCtrl:CtrlReg\/clock             controlcell1        0      0  RISE       1
+
+Data path
+pin name                                            model name    delay     AT  slack  edge  Fanout
+--------------------------------------------------  ------------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:SyncCtrl:CtrlReg\/control_0  controlcell1   1210   1210  75377  RISE       1
+\CapSense_CSD:ClockGen:inter_reset\/main_1          macrocell17    2321   3531  76292  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:inter_reset\/clock_0                macrocell17         0      0  RISE       1
+
+
+
+++++ Path 63 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:SyncCtrl:CtrlReg\/control_2
+Path End       : \CapSense_CSD:Net_1603\/main_7
+Capture Clock  : \CapSense_CSD:Net_1603\/clock_0
+Path slack     : 76306p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Setup time                                                               -3510
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             79823
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       3517
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           3517
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:SyncCtrl:CtrlReg\/clock             controlcell1        0      0  RISE       1
+
+Data path
+pin name                                            model name    delay     AT  slack  edge  Fanout
+--------------------------------------------------  ------------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:SyncCtrl:CtrlReg\/control_2  controlcell1   1210   1210  75437  RISE       1
+\CapSense_CSD:Net_1603\/main_7                      macrocell8     2307   3517  76306  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:Net_1603\/clock_0                            macrocell8          0      0  RISE       1
+
+
+
+++++ Path 64 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ 
+
+Path Begin     : \CapSense_CSD:ClockGen:inter_reset\/q
+Path End       : \CapSense_CSD:ClockGen:ScanSpeed\/reset
+Capture Clock  : \CapSense_CSD:ClockGen:ScanSpeed\/clock
+Path slack     : 76484p
+
+Capture Clock Arrival Time                                                     0
++ Clock path delay                                                             0
++ Cycle adjust (CapSense_CSD_IntClock:R#1 vs. CapSense_CSD_IntClock:R#2)   83333
+- Recovery time                                                                0
+------------------------------------------------------------------------   ----- 
+End-of-path required time (ps)                                             83333
+
+Launch Clock Arrival Time                      0
++ Clock path delay                         0
++ Data path delay                       6849
+-------------------------------------   ---- 
+End-of-path arrival time (ps)           6849
+ 
+Launch Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:inter_reset\/clock_0                macrocell17         0      0  RISE       1
+
+Data path
+pin name                                 model name   delay     AT  slack  edge  Fanout
+---------------------------------------  -----------  -----  -----  -----  ----  ------
+\CapSense_CSD:ClockGen:inter_reset\/q    macrocell17   1250   1250  67871  RISE       1
+\CapSense_CSD:ClockGen:ScanSpeed\/reset  count7cell    5599   6849  76484  RISE       1
+
+Capture Clock Path
+pin name                                                   model name      delay     AT  edge  Fanout
+---------------------------------------------------------  --------------  -----  -----  ----  ------
+ClockBlock/dclk_glb_0                                      clockblockcell      0      0  RISE       1
+\CapSense_CSD:ClockGen:ScanSpeed\/clock                    count7cell          0      0  RISE       1
+
+
+===================================================================== 
+                    End of Detailed Report for all timing paths 
+##################################################################### 
+
+##################################################################### 
+                    End of Timing Report 
+##################################################################### 
+

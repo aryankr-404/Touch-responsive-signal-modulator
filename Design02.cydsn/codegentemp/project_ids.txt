@@ -1,0 +1,6 @@
+E:\Embeded System Lab\ENDSEM-PROJECT\COMPLETE project\Workspace-Final\Design02.cydsn\Design02.cyprj|dc12731a-cffb-476b-ba1a-b0549e4638ff
+C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|34ec523a-1522-48fa-83fc-d8ae94831af3
+C:\Users\aryan\Documents\PSoC Creator\4.4\Downloads ( 4.4).cylib\Downloads ( 4.4).cyprj|11571a50-53ab-45f3-96c3-fbd8474e92c7
+C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|8ea6e70d-9b1b-460f-ae15-ebdb62aa8f79
+C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|d93c70a5-774c-4968-9055-f71df50f2a99
+C:\Program Files (x86)\Cypress\PSoC Creator\4.4\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|56fcd970-7594-4fdd-b2bb-78737b4135d6

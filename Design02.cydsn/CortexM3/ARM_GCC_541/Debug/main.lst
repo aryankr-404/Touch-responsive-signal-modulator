@@ -1,0 +1,2412 @@
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"main.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.global	__aeabi_i2d
+  20              		.global	__aeabi_ddiv
+  21              		.global	__aeabi_dmul
+  22              		.global	__aeabi_dadd
+  23              		.global	__aeabi_d2uiz
+  24              		.section	.text.GenerateSineWave,"ax",%progbits
+  25              		.align	2
+  26              		.global	GenerateSineWave
+  27              		.thumb
+  28              		.thumb_func
+  29              		.type	GenerateSineWave, %function
+  30              	GenerateSineWave:
+  31              	.LFB66:
+  32              		.file 1 "main.c"
+   1:main.c        **** #include <project.h>
+   2:main.c        **** #include <stdio.h>
+   3:main.c        **** #include <math.h>
+   4:main.c        **** 
+   5:main.c        **** // Function prototypes
+   6:main.c        **** void CapSense_DisplayState(void);
+   7:main.c        **** void GenerateSineWave(void);
+   8:main.c        **** void UpdateClockFrequency(void);
+   9:main.c        **** void DisplayBar(uint8 length);
+  10:main.c        **** 
+  11:main.c        **** // Global variables for signal control
+  12:main.c        **** int amplitude = 1000; // Initial peak-to-peak amplitude in millivolts
+  13:main.c        **** int theoreticalAmplitude = 1000; // Tracks the unrestricted amplitude (can exceed max)
+  14:main.c        **** uint8 waveData[64]; // Lookup table for sine wave samples
+  15:main.c        **** uint16 frequency = 1000; 
+  16:main.c        **** uint16 clockDivider = 24000/1000; 
+  17:main.c        **** uint8 barLength = 5; // Initial bar length for LCD display
+  18:main.c        **** 
+  19:main.c        **** int main()
+  20:main.c        **** {
+  21:main.c        ****     /* Enable global interrupts */
+  22:main.c        ****     CyGlobalIntEnable;
+  23:main.c        **** 
+  24:main.c        ****     /* Initialize CapSense module and LCD */
+  25:main.c        ****     CapSense_CSD_Start();
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 2
+
+
+  26:main.c        ****     CapSense_CSD_InitializeAllBaselines();
+  27:main.c        ****     LCD_Start();
+  28:main.c        ****     LCD_ClearDisplay();
+  29:main.c        **** 
+  30:main.c        ****     /* Generate initial sine wave and start DAC */
+  31:main.c        ****     GenerateSineWave();
+  32:main.c        ****     WaveDAC8_Wave1Setup(waveData, 64);
+  33:main.c        ****     WaveDAC8_Start();
+  34:main.c        **** 
+  35:main.c        ****     /* Set clock divider and start clock */
+  36:main.c        ****     Clock_1_SetDividerValue(clockDivider);
+  37:main.c        ****     Clock_1_Start();
+  38:main.c        **** 
+  39:main.c        ****     while(1u)
+  40:main.c        ****     {
+  41:main.c        ****         /* Check if CapSense is done scanning */
+  42:main.c        ****         if(0u == CapSense_CSD_IsBusy())
+  43:main.c        ****         {
+  44:main.c        ****             CapSense_CSD_UpdateEnabledBaselines();
+  45:main.c        ****             CapSense_CSD_ScanEnabledWidgets();
+  46:main.c        ****         }
+  47:main.c        ****         /* Update display and signal based on user input */
+  48:main.c        ****         CapSense_DisplayState();
+  49:main.c        ****     }
+  50:main.c        **** }
+  51:main.c        **** 
+  52:main.c        **** // Handle CapSense inputs and update outputs accordingly
+  53:main.c        **** void CapSense_DisplayState(void)
+  54:main.c        **** {
+  55:main.c        ****     char displayBuffer[16];
+  56:main.c        ****     uint8 amplitudeChanged = 0;
+  57:main.c        ****     uint8 frequencyChanged = 0;
+  58:main.c        **** 
+  59:main.c        ****     /* BUTTON0 (LEFT): Decrease amplitude */
+  60:main.c        ****     if (CapSense_CSD_CheckIsWidgetActive(CapSense_CSD_BUTTON0__BTN))
+  61:main.c        ****     {
+  62:main.c        ****         if (theoreticalAmplitude > 0) theoreticalAmplitude -= 200;
+  63:main.c        ****         if (amplitude > 200) {
+  64:main.c        ****             amplitude -= 200;
+  65:main.c        ****             amplitudeChanged = 1;
+  66:main.c        ****         }
+  67:main.c        ****         LCD_ClearDisplay();
+  68:main.c        ****         LCD_Position(0, 0);
+  69:main.c        ****         LCD_PrintString("LEFT");
+  70:main.c        ****         snprintf(displayBuffer, sizeof(displayBuffer), "Theo: %d mV", theoreticalAmplitude);
+  71:main.c        ****         LCD_Position(1, 0);
+  72:main.c        ****         LCD_PrintString(displayBuffer);
+  73:main.c        ****         CyDelay(100); // Debounce delay
+  74:main.c        ****     }
+  75:main.c        **** 
+  76:main.c        ****     /* BUTTON1 (RIGHT): Increase amplitude */
+  77:main.c        ****     if (CapSense_CSD_CheckIsWidgetActive(CapSense_CSD_BUTTON1__BTN))
+  78:main.c        ****     {
+  79:main.c        ****         theoreticalAmplitude += 200;
+  80:main.c        ****         if (amplitude < 1000) {
+  81:main.c        ****             amplitude += 200;
+  82:main.c        ****             amplitudeChanged = 1;
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 3
+
+
+  83:main.c        ****         }
+  84:main.c        ****         LCD_ClearDisplay();
+  85:main.c        ****         LCD_Position(0, 0);
+  86:main.c        ****         LCD_PrintString("RIGHT");
+  87:main.c        ****         snprintf(displayBuffer, sizeof(displayBuffer), "Theo: %d mV", theoreticalAmplitude);
+  88:main.c        ****         LCD_Position(1, 0);
+  89:main.c        ****         LCD_PrintString(displayBuffer);
+  90:main.c        ****         CyDelay(100); // Debounce delay
+  91:main.c        ****     }
+  92:main.c        **** 
+  93:main.c        ****     /* Linear Slider: Adjust frequency and bar length */
+  94:main.c        ****     uint16 curPos = CapSense_CSD_GetCentroidPos(CapSense_CSD_LINEARSLIDER0__LS);
+  95:main.c        ****     if (curPos != 0xFFFFu) {
+  96:main.c        ****         static uint16 prevPos = 0;
+  97:main.c        ****         if (curPos > prevPos && frequency < 5000) {
+  98:main.c        ****             frequency += 100;
+  99:main.c        ****             frequencyChanged = 1;
+ 100:main.c        ****             if (barLength < 16) barLength++; // Increase bar length
+ 101:main.c        ****         } else if (curPos < prevPos && frequency > 100) {
+ 102:main.c        ****             frequency -= 100;
+ 103:main.c        ****             frequencyChanged = 1;
+ 104:main.c        ****             if (barLength > 1) barLength--; // Decrease bar length
+ 105:main.c        ****         }
+ 106:main.c        ****         prevPos = curPos;
+ 107:main.c        ****     }
+ 108:main.c        **** 
+ 109:main.c        ****     /* Update output frequency if needed */
+ 110:main.c        ****     if (frequencyChanged) {
+ 111:main.c        ****         UpdateClockFrequency();
+ 112:main.c        ****     }
+ 113:main.c        **** 
+ 114:main.c        ****     /* Regenerate sine wave if amplitude was changed */
+ 115:main.c        ****     if (amplitudeChanged) {
+ 116:main.c        ****         GenerateSineWave();
+ 117:main.c        ****     }
+ 118:main.c        **** }
+ 119:main.c        **** 
+ 120:main.c        **** /* Generate a sine wave based on the current amplitude */
+ 121:main.c        **** void GenerateSineWave(void)
+ 122:main.c        **** {
+  33              		.loc 1 122 0
+  34              		.cfi_startproc
+  35              		@ args = 0, pretend = 0, frame = 0
+  36              		@ frame_needed = 0, uses_anonymous_args = 0
+  37 0000 D0B5     		push	{r4, r6, r7, lr}
+  38              		.cfi_def_cfa_offset 16
+  39              		.cfi_offset 4, -16
+  40              		.cfi_offset 6, -12
+  41              		.cfi_offset 7, -8
+  42              		.cfi_offset 14, -4
+  43              	.LVL0:
+  44              	.LBB2:
+ 123:main.c        ****     for (uint8 i = 0; i < 64; i++)
+  45              		.loc 1 123 0
+  46 0002 0024     		movs	r4, #0
+  47 0004 30E0     		b	.L2
+  48              	.LVL1:
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 4
+
+
+  49              	.L3:
+ 124:main.c        ****     {
+ 125:main.c        ****         waveData[i] = (uint8)(((amplitude / 1000.0) * 255 * (1 + sin((2 * M_PI * i) / 64))) / 2);
+  50              		.loc 1 125 0 discriminator 3
+  51 0006 204B     		ldr	r3, .L5+16
+  52 0008 1868     		ldr	r0, [r3]
+  53 000a FFF7FEFF 		bl	__aeabi_i2d
+  54              	.LVL2:
+  55 000e 0022     		movs	r2, #0
+  56 0010 1E4B     		ldr	r3, .L5+20
+  57 0012 FFF7FEFF 		bl	__aeabi_ddiv
+  58              	.LVL3:
+  59 0016 18A3     		adr	r3, .L5
+  60 0018 D3E90023 		ldrd	r2, [r3]
+  61 001c FFF7FEFF 		bl	__aeabi_dmul
+  62              	.LVL4:
+  63 0020 0646     		mov	r6, r0
+  64 0022 0F46     		mov	r7, r1
+  65 0024 2046     		mov	r0, r4
+  66 0026 FFF7FEFF 		bl	__aeabi_i2d
+  67              	.LVL5:
+  68 002a 15A3     		adr	r3, .L5+8
+  69 002c D3E90023 		ldrd	r2, [r3]
+  70 0030 FFF7FEFF 		bl	__aeabi_dmul
+  71              	.LVL6:
+  72 0034 0022     		movs	r2, #0
+  73 0036 164B     		ldr	r3, .L5+24
+  74 0038 FFF7FEFF 		bl	__aeabi_dmul
+  75              	.LVL7:
+  76 003c FFF7FEFF 		bl	sin
+  77              	.LVL8:
+  78 0040 0022     		movs	r2, #0
+  79 0042 144B     		ldr	r3, .L5+28
+  80 0044 FFF7FEFF 		bl	__aeabi_dadd
+  81              	.LVL9:
+  82 0048 0246     		mov	r2, r0
+  83 004a 0B46     		mov	r3, r1
+  84 004c 3046     		mov	r0, r6
+  85 004e 3946     		mov	r1, r7
+  86 0050 FFF7FEFF 		bl	__aeabi_dmul
+  87              	.LVL10:
+  88 0054 0022     		movs	r2, #0
+  89 0056 104B     		ldr	r3, .L5+32
+  90 0058 FFF7FEFF 		bl	__aeabi_dmul
+  91              	.LVL11:
+  92 005c FFF7FEFF 		bl	__aeabi_d2uiz
+  93              	.LVL12:
+  94 0060 0E4B     		ldr	r3, .L5+36
+  95 0062 1855     		strb	r0, [r3, r4]
+ 123:main.c        ****     for (uint8 i = 0; i < 64; i++)
+  96              		.loc 1 123 0 discriminator 3
+  97 0064 0134     		adds	r4, r4, #1
+  98              	.LVL13:
+  99 0066 E4B2     		uxtb	r4, r4
+ 100              	.LVL14:
+ 101              	.L2:
+ 123:main.c        ****     for (uint8 i = 0; i < 64; i++)
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 5
+
+
+ 102              		.loc 1 123 0 is_stmt 0 discriminator 1
+ 103 0068 3F2C     		cmp	r4, #63
+ 104 006a CCD9     		bls	.L3
+ 105              	.LBE2:
+ 126:main.c        ****     }
+ 127:main.c        ****     WaveDAC8_Wave1Setup(waveData, 64);
+ 106              		.loc 1 127 0 is_stmt 1
+ 107 006c 4021     		movs	r1, #64
+ 108 006e 0B48     		ldr	r0, .L5+36
+ 109 0070 FFF7FEFF 		bl	WaveDAC8_Wave1Setup
+ 110              	.LVL15:
+ 111 0074 D0BD     		pop	{r4, r6, r7, pc}
+ 112              	.LVL16:
+ 113              	.L6:
+ 114 0076 00BF     		.align	3
+ 115              	.L5:
+ 116 0078 00000000 		.word	0
+ 117 007c 00E06F40 		.word	1081073664
+ 118 0080 182D4454 		.word	1413754136
+ 119 0084 FB211940 		.word	1075388923
+ 120 0088 00000000 		.word	.LANCHOR0
+ 121 008c 00408F40 		.word	1083129856
+ 122 0090 0000903F 		.word	1066401792
+ 123 0094 0000F03F 		.word	1072693248
+ 124 0098 0000E03F 		.word	1071644672
+ 125 009c 00000000 		.word	waveData
+ 126              		.cfi_endproc
+ 127              	.LFE66:
+ 128              		.size	GenerateSineWave, .-GenerateSineWave
+ 129              		.section	.text.UpdateClockFrequency,"ax",%progbits
+ 130              		.align	2
+ 131              		.global	UpdateClockFrequency
+ 132              		.thumb
+ 133              		.thumb_func
+ 134              		.type	UpdateClockFrequency, %function
+ 135              	UpdateClockFrequency:
+ 136              	.LFB67:
+ 128:main.c        **** }
+ 129:main.c        **** 
+ 130:main.c        **** /* Update the clock frequency driving WaveDAC8 */
+ 131:main.c        **** void UpdateClockFrequency(void)
+ 132:main.c        **** {
+ 137              		.loc 1 132 0
+ 138              		.cfi_startproc
+ 139              		@ args = 0, pretend = 0, frame = 0
+ 140              		@ frame_needed = 0, uses_anonymous_args = 0
+ 141 0000 08B5     		push	{r3, lr}
+ 142              		.cfi_def_cfa_offset 8
+ 143              		.cfi_offset 3, -8
+ 144              		.cfi_offset 14, -4
+ 133:main.c        ****     clockDivider = 24000 / frequency; 
+ 145              		.loc 1 133 0
+ 146 0002 064A     		ldr	r2, .L9
+ 147 0004 9088     		ldrh	r0, [r2, #4]
+ 148 0006 45F6C053 		movw	r3, #24000
+ 149 000a 93FBF0F0 		sdiv	r0, r3, r0
+ 150 000e D080     		strh	r0, [r2, #6]	@ movhi
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 6
+
+
+ 134:main.c        ****     Clock_1_SetDividerValue(clockDivider);
+ 151              		.loc 1 134 0
+ 152 0010 0138     		subs	r0, r0, #1
+ 153 0012 0121     		movs	r1, #1
+ 154 0014 80B2     		uxth	r0, r0
+ 155 0016 FFF7FEFF 		bl	Clock_1_SetDividerRegister
+ 156              	.LVL17:
+ 157 001a 08BD     		pop	{r3, pc}
+ 158              	.L10:
+ 159              		.align	2
+ 160              	.L9:
+ 161 001c 00000000 		.word	.LANCHOR0
+ 162              		.cfi_endproc
+ 163              	.LFE67:
+ 164              		.size	UpdateClockFrequency, .-UpdateClockFrequency
+ 165              		.section	.text.CapSense_DisplayState,"ax",%progbits
+ 166              		.align	2
+ 167              		.global	CapSense_DisplayState
+ 168              		.thumb
+ 169              		.thumb_func
+ 170              		.type	CapSense_DisplayState, %function
+ 171              	CapSense_DisplayState:
+ 172              	.LFB65:
+  54:main.c        ****     char displayBuffer[16];
+ 173              		.loc 1 54 0
+ 174              		.cfi_startproc
+ 175              		@ args = 0, pretend = 0, frame = 16
+ 176              		@ frame_needed = 0, uses_anonymous_args = 0
+ 177 0000 10B5     		push	{r4, lr}
+ 178              		.cfi_def_cfa_offset 8
+ 179              		.cfi_offset 4, -8
+ 180              		.cfi_offset 14, -4
+ 181 0002 84B0     		sub	sp, sp, #16
+ 182              		.cfi_def_cfa_offset 24
+ 183              	.LVL18:
+  60:main.c        ****     {
+ 184              		.loc 1 60 0
+ 185 0004 0120     		movs	r0, #1
+ 186 0006 FFF7FEFF 		bl	CapSense_CSD_CheckIsWidgetActive
+ 187              	.LVL19:
+ 188 000a 60B3     		cbz	r0, .L22
+  62:main.c        ****         if (amplitude > 200) {
+ 189              		.loc 1 62 0
+ 190 000c 4B4B     		ldr	r3, .L30
+ 191 000e 9B68     		ldr	r3, [r3, #8]
+ 192 0010 002B     		cmp	r3, #0
+ 193 0012 02DD     		ble	.L13
+  62:main.c        ****         if (amplitude > 200) {
+ 194              		.loc 1 62 0 is_stmt 0 discriminator 1
+ 195 0014 C83B     		subs	r3, r3, #200
+ 196 0016 494A     		ldr	r2, .L30
+ 197 0018 9360     		str	r3, [r2, #8]
+ 198              	.L13:
+  63:main.c        ****             amplitude -= 200;
+ 199              		.loc 1 63 0 is_stmt 1
+ 200 001a 484B     		ldr	r3, .L30
+ 201 001c 1B68     		ldr	r3, [r3]
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 7
+
+
+ 202 001e C82B     		cmp	r3, #200
+ 203 0020 04DD     		ble	.L23
+  64:main.c        ****             amplitudeChanged = 1;
+ 204              		.loc 1 64 0
+ 205 0022 C83B     		subs	r3, r3, #200
+ 206 0024 454A     		ldr	r2, .L30
+ 207 0026 1360     		str	r3, [r2]
+ 208              	.LVL20:
+  65:main.c        ****         }
+ 209              		.loc 1 65 0
+ 210 0028 0124     		movs	r4, #1
+ 211 002a 00E0     		b	.L14
+ 212              	.LVL21:
+ 213              	.L23:
+  56:main.c        ****     uint8 frequencyChanged = 0;
+ 214              		.loc 1 56 0
+ 215 002c 0024     		movs	r4, #0
+ 216              	.LVL22:
+ 217              	.L14:
+  67:main.c        ****         LCD_Position(0, 0);
+ 218              		.loc 1 67 0
+ 219 002e 0120     		movs	r0, #1
+ 220 0030 FFF7FEFF 		bl	LCD_WriteControl
+ 221              	.LVL23:
+  68:main.c        ****         LCD_PrintString("LEFT");
+ 222              		.loc 1 68 0
+ 223 0034 0021     		movs	r1, #0
+ 224 0036 0846     		mov	r0, r1
+ 225 0038 FFF7FEFF 		bl	LCD_Position
+ 226              	.LVL24:
+  69:main.c        ****         snprintf(displayBuffer, sizeof(displayBuffer), "Theo: %d mV", theoreticalAmplitude);
+ 227              		.loc 1 69 0
+ 228 003c 4048     		ldr	r0, .L30+4
+ 229 003e FFF7FEFF 		bl	LCD_PrintString
+ 230              	.LVL25:
+  70:main.c        ****         LCD_Position(1, 0);
+ 231              		.loc 1 70 0
+ 232 0042 3E4B     		ldr	r3, .L30
+ 233 0044 9B68     		ldr	r3, [r3, #8]
+ 234 0046 3F4A     		ldr	r2, .L30+8
+ 235 0048 1021     		movs	r1, #16
+ 236 004a 6846     		mov	r0, sp
+ 237 004c FFF7FEFF 		bl	snprintf
+ 238              	.LVL26:
+  71:main.c        ****         LCD_PrintString(displayBuffer);
+ 239              		.loc 1 71 0
+ 240 0050 0021     		movs	r1, #0
+ 241 0052 0120     		movs	r0, #1
+ 242 0054 FFF7FEFF 		bl	LCD_Position
+ 243              	.LVL27:
+  72:main.c        ****         CyDelay(100); // Debounce delay
+ 244              		.loc 1 72 0
+ 245 0058 6846     		mov	r0, sp
+ 246 005a FFF7FEFF 		bl	LCD_PrintString
+ 247              	.LVL28:
+  73:main.c        ****     }
+ 248              		.loc 1 73 0
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 8
+
+
+ 249 005e 6420     		movs	r0, #100
+ 250 0060 FFF7FEFF 		bl	CyDelay
+ 251              	.LVL29:
+ 252 0064 00E0     		b	.L12
+ 253              	.LVL30:
+ 254              	.L22:
+  56:main.c        ****     uint8 frequencyChanged = 0;
+ 255              		.loc 1 56 0
+ 256 0066 0024     		movs	r4, #0
+ 257              	.LVL31:
+ 258              	.L12:
+  77:main.c        ****     {
+ 259              		.loc 1 77 0
+ 260 0068 0220     		movs	r0, #2
+ 261 006a FFF7FEFF 		bl	CapSense_CSD_CheckIsWidgetActive
+ 262              	.LVL32:
+ 263 006e 30B3     		cbz	r0, .L15
+  79:main.c        ****         if (amplitude < 1000) {
+ 264              		.loc 1 79 0
+ 265 0070 324B     		ldr	r3, .L30
+ 266 0072 9A68     		ldr	r2, [r3, #8]
+ 267 0074 C832     		adds	r2, r2, #200
+ 268 0076 9A60     		str	r2, [r3, #8]
+  80:main.c        ****             amplitude += 200;
+ 269              		.loc 1 80 0
+ 270 0078 1B68     		ldr	r3, [r3]
+ 271 007a B3F57A7F 		cmp	r3, #1000
+ 272 007e 03DA     		bge	.L16
+  81:main.c        ****             amplitudeChanged = 1;
+ 273              		.loc 1 81 0
+ 274 0080 C833     		adds	r3, r3, #200
+ 275 0082 2E4A     		ldr	r2, .L30
+ 276 0084 1360     		str	r3, [r2]
+ 277              	.LVL33:
+  82:main.c        ****         }
+ 278              		.loc 1 82 0
+ 279 0086 0124     		movs	r4, #1
+ 280              	.LVL34:
+ 281              	.L16:
+  84:main.c        ****         LCD_Position(0, 0);
+ 282              		.loc 1 84 0
+ 283 0088 0120     		movs	r0, #1
+ 284 008a FFF7FEFF 		bl	LCD_WriteControl
+ 285              	.LVL35:
+  85:main.c        ****         LCD_PrintString("RIGHT");
+ 286              		.loc 1 85 0
+ 287 008e 0021     		movs	r1, #0
+ 288 0090 0846     		mov	r0, r1
+ 289 0092 FFF7FEFF 		bl	LCD_Position
+ 290              	.LVL36:
+  86:main.c        ****         snprintf(displayBuffer, sizeof(displayBuffer), "Theo: %d mV", theoreticalAmplitude);
+ 291              		.loc 1 86 0
+ 292 0096 2C48     		ldr	r0, .L30+12
+ 293 0098 FFF7FEFF 		bl	LCD_PrintString
+ 294              	.LVL37:
+  87:main.c        ****         LCD_Position(1, 0);
+ 295              		.loc 1 87 0
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 9
+
+
+ 296 009c 274B     		ldr	r3, .L30
+ 297 009e 9B68     		ldr	r3, [r3, #8]
+ 298 00a0 284A     		ldr	r2, .L30+8
+ 299 00a2 1021     		movs	r1, #16
+ 300 00a4 6846     		mov	r0, sp
+ 301 00a6 FFF7FEFF 		bl	snprintf
+ 302              	.LVL38:
+  88:main.c        ****         LCD_PrintString(displayBuffer);
+ 303              		.loc 1 88 0
+ 304 00aa 0021     		movs	r1, #0
+ 305 00ac 0120     		movs	r0, #1
+ 306 00ae FFF7FEFF 		bl	LCD_Position
+ 307              	.LVL39:
+  89:main.c        ****         CyDelay(100); // Debounce delay
+ 308              		.loc 1 89 0
+ 309 00b2 6846     		mov	r0, sp
+ 310 00b4 FFF7FEFF 		bl	LCD_PrintString
+ 311              	.LVL40:
+  90:main.c        ****     }
+ 312              		.loc 1 90 0
+ 313 00b8 6420     		movs	r0, #100
+ 314 00ba FFF7FEFF 		bl	CyDelay
+ 315              	.LVL41:
+ 316              	.L15:
+  94:main.c        ****     if (curPos != 0xFFFFu) {
+ 317              		.loc 1 94 0
+ 318 00be 0020     		movs	r0, #0
+ 319 00c0 FFF7FEFF 		bl	CapSense_CSD_GetCentroidPos
+ 320              	.LVL42:
+  95:main.c        ****         static uint16 prevPos = 0;
+ 321              		.loc 1 95 0
+ 322 00c4 4FF6FF73 		movw	r3, #65535
+ 323 00c8 9842     		cmp	r0, r3
+ 324 00ca 2ED0     		beq	.L24
+ 325              	.LBB3:
+  97:main.c        ****             frequency += 100;
+ 326              		.loc 1 97 0
+ 327 00cc 1F4B     		ldr	r3, .L30+16
+ 328 00ce 1B88     		ldrh	r3, [r3]
+ 329 00d0 9842     		cmp	r0, r3
+ 330 00d2 10D9     		bls	.L18
+  97:main.c        ****             frequency += 100;
+ 331              		.loc 1 97 0 is_stmt 0 discriminator 1
+ 332 00d4 194A     		ldr	r2, .L30
+ 333 00d6 9288     		ldrh	r2, [r2, #4]
+ 334 00d8 41F28731 		movw	r1, #4999
+ 335 00dc 8A42     		cmp	r2, r1
+ 336 00de 0AD8     		bhi	.L18
+  98:main.c        ****             frequencyChanged = 1;
+ 337              		.loc 1 98 0 is_stmt 1
+ 338 00e0 164B     		ldr	r3, .L30
+ 339 00e2 6432     		adds	r2, r2, #100
+ 340 00e4 9A80     		strh	r2, [r3, #4]	@ movhi
+ 341              	.LVL43:
+ 100:main.c        ****         } else if (curPos < prevPos && frequency > 100) {
+ 342              		.loc 1 100 0
+ 343 00e6 1B7B     		ldrb	r3, [r3, #12]	@ zero_extendqisi2
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 10
+
+
+ 344 00e8 0F2B     		cmp	r3, #15
+ 345 00ea 14D8     		bhi	.L25
+ 100:main.c        ****         } else if (curPos < prevPos && frequency > 100) {
+ 346              		.loc 1 100 0 is_stmt 0 discriminator 1
+ 347 00ec 0133     		adds	r3, r3, #1
+ 348 00ee 134A     		ldr	r2, .L30
+ 349 00f0 1373     		strb	r3, [r2, #12]
+  99:main.c        ****             if (barLength < 16) barLength++; // Increase bar length
+ 350              		.loc 1 99 0 is_stmt 1 discriminator 1
+ 351 00f2 0123     		movs	r3, #1
+ 352 00f4 16E0     		b	.L19
+ 353              	.LVL44:
+ 354              	.L18:
+ 101:main.c        ****             frequency -= 100;
+ 355              		.loc 1 101 0
+ 356 00f6 9842     		cmp	r0, r3
+ 357 00f8 0FD2     		bcs	.L26
+ 101:main.c        ****             frequency -= 100;
+ 358              		.loc 1 101 0 is_stmt 0 discriminator 1
+ 359 00fa 104B     		ldr	r3, .L30
+ 360 00fc 9B88     		ldrh	r3, [r3, #4]
+ 361 00fe 642B     		cmp	r3, #100
+ 362 0100 0DD9     		bls	.L27
+ 102:main.c        ****             frequencyChanged = 1;
+ 363              		.loc 1 102 0 is_stmt 1
+ 364 0102 0E4A     		ldr	r2, .L30
+ 365 0104 643B     		subs	r3, r3, #100
+ 366 0106 9380     		strh	r3, [r2, #4]	@ movhi
+ 367              	.LVL45:
+ 104:main.c        ****         }
+ 368              		.loc 1 104 0
+ 369 0108 137B     		ldrb	r3, [r2, #12]	@ zero_extendqisi2
+ 370 010a 012B     		cmp	r3, #1
+ 371 010c 09D9     		bls	.L28
+ 104:main.c        ****         }
+ 372              		.loc 1 104 0 is_stmt 0 discriminator 1
+ 373 010e 013B     		subs	r3, r3, #1
+ 374 0110 1373     		strb	r3, [r2, #12]
+ 103:main.c        ****             if (barLength > 1) barLength--; // Decrease bar length
+ 375              		.loc 1 103 0 is_stmt 1 discriminator 1
+ 376 0112 0123     		movs	r3, #1
+ 377 0114 06E0     		b	.L19
+ 378              	.L25:
+  99:main.c        ****             if (barLength < 16) barLength++; // Increase bar length
+ 379              		.loc 1 99 0
+ 380 0116 0123     		movs	r3, #1
+ 381 0118 04E0     		b	.L19
+ 382              	.LVL46:
+ 383              	.L26:
+ 384              	.LBE3:
+  57:main.c        **** 
+ 385              		.loc 1 57 0
+ 386 011a 0023     		movs	r3, #0
+ 387 011c 02E0     		b	.L19
+ 388              	.L27:
+ 389 011e 0023     		movs	r3, #0
+ 390 0120 00E0     		b	.L19
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 11
+
+
+ 391              	.LVL47:
+ 392              	.L28:
+ 393              	.LBB4:
+ 103:main.c        ****             if (barLength > 1) barLength--; // Decrease bar length
+ 394              		.loc 1 103 0
+ 395 0122 0123     		movs	r3, #1
+ 396              	.LVL48:
+ 397              	.L19:
+ 106:main.c        ****     }
+ 398              		.loc 1 106 0
+ 399 0124 094A     		ldr	r2, .L30+16
+ 400 0126 1080     		strh	r0, [r2]	@ movhi
+ 401 0128 00E0     		b	.L17
+ 402              	.LVL49:
+ 403              	.L24:
+ 404              	.LBE4:
+  57:main.c        **** 
+ 405              		.loc 1 57 0
+ 406 012a 0023     		movs	r3, #0
+ 407              	.LVL50:
+ 408              	.L17:
+ 110:main.c        ****         UpdateClockFrequency();
+ 409              		.loc 1 110 0
+ 410 012c 0BB1     		cbz	r3, .L20
+ 111:main.c        ****     }
+ 411              		.loc 1 111 0
+ 412 012e FFF7FEFF 		bl	UpdateClockFrequency
+ 413              	.LVL51:
+ 414              	.L20:
+ 115:main.c        ****         GenerateSineWave();
+ 415              		.loc 1 115 0
+ 416 0132 0CB1     		cbz	r4, .L11
+ 116:main.c        ****     }
+ 417              		.loc 1 116 0
+ 418 0134 FFF7FEFF 		bl	GenerateSineWave
+ 419              	.LVL52:
+ 420              	.L11:
+ 118:main.c        **** 
+ 421              		.loc 1 118 0
+ 422 0138 04B0     		add	sp, sp, #16
+ 423              		.cfi_def_cfa_offset 8
+ 424              		@ sp needed
+ 425 013a 10BD     		pop	{r4, pc}
+ 426              	.LVL53:
+ 427              	.L31:
+ 428              		.align	2
+ 429              	.L30:
+ 430 013c 00000000 		.word	.LANCHOR0
+ 431 0140 00000000 		.word	.LC0
+ 432 0144 08000000 		.word	.LC1
+ 433 0148 14000000 		.word	.LC2
+ 434 014c 00000000 		.word	.LANCHOR1
+ 435              		.cfi_endproc
+ 436              	.LFE65:
+ 437              		.size	CapSense_DisplayState, .-CapSense_DisplayState
+ 438              		.section	.text.main,"ax",%progbits
+ 439              		.align	2
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 12
+
+
+ 440              		.global	main
+ 441              		.thumb
+ 442              		.thumb_func
+ 443              		.type	main, %function
+ 444              	main:
+ 445              	.LFB64:
+  20:main.c        ****     /* Enable global interrupts */
+ 446              		.loc 1 20 0
+ 447              		.cfi_startproc
+ 448              		@ Volatile: function does not return.
+ 449              		@ args = 0, pretend = 0, frame = 0
+ 450              		@ frame_needed = 0, uses_anonymous_args = 0
+ 451 0000 08B5     		push	{r3, lr}
+ 452              		.cfi_def_cfa_offset 8
+ 453              		.cfi_offset 3, -8
+ 454              		.cfi_offset 14, -4
+  22:main.c        **** 
+ 455              		.loc 1 22 0
+ 456              		.syntax unified
+ 457              	@ 22 "main.c" 1
+ 458 0002 62B6     		CPSIE   i
+ 459              	@ 0 "" 2
+  25:main.c        ****     CapSense_CSD_InitializeAllBaselines();
+ 460              		.loc 1 25 0
+ 461              		.thumb
+ 462              		.syntax unified
+ 463 0004 FFF7FEFF 		bl	CapSense_CSD_Start
+ 464              	.LVL54:
+  26:main.c        ****     LCD_Start();
+ 465              		.loc 1 26 0
+ 466 0008 FFF7FEFF 		bl	CapSense_CSD_InitializeAllBaselines
+ 467              	.LVL55:
+  27:main.c        ****     LCD_ClearDisplay();
+ 468              		.loc 1 27 0
+ 469 000c FFF7FEFF 		bl	LCD_Start
+ 470              	.LVL56:
+  28:main.c        **** 
+ 471              		.loc 1 28 0
+ 472 0010 0120     		movs	r0, #1
+ 473 0012 FFF7FEFF 		bl	LCD_WriteControl
+ 474              	.LVL57:
+  31:main.c        ****     WaveDAC8_Wave1Setup(waveData, 64);
+ 475              		.loc 1 31 0
+ 476 0016 FFF7FEFF 		bl	GenerateSineWave
+ 477              	.LVL58:
+  32:main.c        ****     WaveDAC8_Start();
+ 478              		.loc 1 32 0
+ 479 001a 4021     		movs	r1, #64
+ 480 001c 0B48     		ldr	r0, .L36
+ 481 001e FFF7FEFF 		bl	WaveDAC8_Wave1Setup
+ 482              	.LVL59:
+  33:main.c        **** 
+ 483              		.loc 1 33 0
+ 484 0022 FFF7FEFF 		bl	WaveDAC8_Start
+ 485              	.LVL60:
+  36:main.c        ****     Clock_1_Start();
+ 486              		.loc 1 36 0
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 13
+
+
+ 487 0026 0A4B     		ldr	r3, .L36+4
+ 488 0028 D888     		ldrh	r0, [r3, #6]
+ 489 002a 0138     		subs	r0, r0, #1
+ 490 002c 0121     		movs	r1, #1
+ 491 002e 80B2     		uxth	r0, r0
+ 492 0030 FFF7FEFF 		bl	Clock_1_SetDividerRegister
+ 493              	.LVL61:
+  37:main.c        **** 
+ 494              		.loc 1 37 0
+ 495 0034 FFF7FEFF 		bl	Clock_1_Start
+ 496              	.LVL62:
+ 497              	.L34:
+  42:main.c        ****         {
+ 498              		.loc 1 42 0
+ 499 0038 FFF7FEFF 		bl	CapSense_CSD_IsBusy
+ 500              	.LVL63:
+ 501 003c 18B9     		cbnz	r0, .L33
+  44:main.c        ****             CapSense_CSD_ScanEnabledWidgets();
+ 502              		.loc 1 44 0
+ 503 003e FFF7FEFF 		bl	CapSense_CSD_UpdateEnabledBaselines
+ 504              	.LVL64:
+  45:main.c        ****         }
+ 505              		.loc 1 45 0
+ 506 0042 FFF7FEFF 		bl	CapSense_CSD_ScanEnabledWidgets
+ 507              	.LVL65:
+ 508              	.L33:
+  48:main.c        ****     }
+ 509              		.loc 1 48 0
+ 510 0046 FFF7FEFF 		bl	CapSense_DisplayState
+ 511              	.LVL66:
+  49:main.c        **** }
+ 512              		.loc 1 49 0
+ 513 004a F5E7     		b	.L34
+ 514              	.L37:
+ 515              		.align	2
+ 516              	.L36:
+ 517 004c 00000000 		.word	waveData
+ 518 0050 00000000 		.word	.LANCHOR0
+ 519              		.cfi_endproc
+ 520              	.LFE64:
+ 521              		.size	main, .-main
+ 522              		.section	.text.DisplayBar,"ax",%progbits
+ 523              		.align	2
+ 524              		.global	DisplayBar
+ 525              		.thumb
+ 526              		.thumb_func
+ 527              		.type	DisplayBar, %function
+ 528              	DisplayBar:
+ 529              	.LFB68:
+ 135:main.c        **** }
+ 136:main.c        **** 
+ 137:main.c        **** /* Draw a horizontal bar with the given length on line 4 */
+ 138:main.c        **** void DisplayBar(uint8 length)
+ 139:main.c        **** {
+ 530              		.loc 1 139 0
+ 531              		.cfi_startproc
+ 532              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 14
+
+
+ 533              		@ frame_needed = 0, uses_anonymous_args = 0
+ 534              		@ link register save eliminated.
+ 535              	.LVL67:
+ 536 0000 7047     		bx	lr
+ 537              		.cfi_endproc
+ 538              	.LFE68:
+ 539              		.size	DisplayBar, .-DisplayBar
+ 540              		.global	barLength
+ 541              		.global	clockDivider
+ 542              		.global	frequency
+ 543              		.comm	waveData,64,4
+ 544              		.global	theoreticalAmplitude
+ 545              		.global	amplitude
+ 546 0002 00BF     		.data
+ 547              		.align	2
+ 548              		.set	.LANCHOR0,. + 0
+ 549              		.type	amplitude, %object
+ 550              		.size	amplitude, 4
+ 551              	amplitude:
+ 552 0000 E8030000 		.word	1000
+ 553              		.type	frequency, %object
+ 554              		.size	frequency, 2
+ 555              	frequency:
+ 556 0004 E803     		.short	1000
+ 557              		.type	clockDivider, %object
+ 558              		.size	clockDivider, 2
+ 559              	clockDivider:
+ 560 0006 1800     		.short	24
+ 561              		.type	theoreticalAmplitude, %object
+ 562              		.size	theoreticalAmplitude, 4
+ 563              	theoreticalAmplitude:
+ 564 0008 E8030000 		.word	1000
+ 565              		.type	barLength, %object
+ 566              		.size	barLength, 1
+ 567              	barLength:
+ 568 000c 05       		.byte	5
+ 569              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 570              		.align	2
+ 571              	.LC0:
+ 572 0000 4C454654 		.ascii	"LEFT\000"
+ 572      00
+ 573 0005 000000   		.space	3
+ 574              	.LC1:
+ 575 0008 5468656F 		.ascii	"Theo: %d mV\000"
+ 575      3A202564 
+ 575      206D5600 
+ 576              	.LC2:
+ 577 0014 52494748 		.ascii	"RIGHT\000"
+ 577      5400
+ 578              		.bss
+ 579              		.align	1
+ 580              		.set	.LANCHOR1,. + 0
+ 581              		.type	prevPos.7234, %object
+ 582              		.size	prevPos.7234, 2
+ 583              	prevPos.7234:
+ 584 0000 0000     		.space	2
+ 585              		.text
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 15
+
+
+ 586              	.Letext0:
+ 587              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 588              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4.
+ 589              		.file 4 "Generated_Source\\PSoC5/cytypes.h"
+ 590              		.file 5 "Generated_Source\\PSoC5/core_cm3.h"
+ 591              		.file 6 "Generated_Source\\PSoC5/WaveDAC8.h"
+ 592              		.file 7 "Generated_Source\\PSoC5/Clock_1.h"
+ 593              		.file 8 "Generated_Source\\PSoC5/CapSense_CSD_CSHL.h"
+ 594              		.file 9 "Generated_Source\\PSoC5/LCD.h"
+ 595              		.file 10 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4
+ 596              		.file 11 "Generated_Source\\PSoC5/CyLib.h"
+ 597              		.file 12 "Generated_Source\\PSoC5/CapSense_CSD.h"
+ 598              		.file 13 "c:\\program files (x86)\\cypress\\psoc creator\\4.4\\psoc creator\\import\\gnu\\arm\\5.4
+ 599              		.section	.debug_info,"",%progbits
+ 600              	.Ldebug_info0:
+ 601 0000 67050000 		.4byte	0x567
+ 602 0004 0400     		.2byte	0x4
+ 603 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 604 000a 04       		.byte	0x4
+ 605 000b 01       		.uleb128 0x1
+ 606 000c 13010000 		.4byte	.LASF51
+ 607 0010 0C       		.byte	0xc
+ 608 0011 35030000 		.4byte	.LASF52
+ 609 0015 B0000000 		.4byte	.LASF53
+ 610 0019 18000000 		.4byte	.Ldebug_ranges0+0x18
+ 611 001d 00000000 		.4byte	0
+ 612 0021 00000000 		.4byte	.Ldebug_line0
+ 613 0025 02       		.uleb128 0x2
+ 614 0026 01       		.byte	0x1
+ 615 0027 06       		.byte	0x6
+ 616 0028 C7030000 		.4byte	.LASF0
+ 617 002c 02       		.uleb128 0x2
+ 618 002d 01       		.byte	0x1
+ 619 002e 08       		.byte	0x8
+ 620 002f 05010000 		.4byte	.LASF1
+ 621 0033 02       		.uleb128 0x2
+ 622 0034 02       		.byte	0x2
+ 623 0035 05       		.byte	0x5
+ 624 0036 44020000 		.4byte	.LASF2
+ 625 003a 02       		.uleb128 0x2
+ 626 003b 02       		.byte	0x2
+ 627 003c 07       		.byte	0x7
+ 628 003d DB030000 		.4byte	.LASF3
+ 629 0041 03       		.uleb128 0x3
+ 630 0042 0A000000 		.4byte	.LASF9
+ 631 0046 02       		.byte	0x2
+ 632 0047 3F       		.byte	0x3f
+ 633 0048 4C000000 		.4byte	0x4c
+ 634 004c 02       		.uleb128 0x2
+ 635 004d 04       		.byte	0x4
+ 636 004e 05       		.byte	0x5
+ 637 004f B2030000 		.4byte	.LASF4
+ 638 0053 02       		.uleb128 0x2
+ 639 0054 04       		.byte	0x4
+ 640 0055 07       		.byte	0x7
+ 641 0056 D1010000 		.4byte	.LASF5
+ 642 005a 02       		.uleb128 0x2
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 16
+
+
+ 643 005b 08       		.byte	0x8
+ 644 005c 05       		.byte	0x5
+ 645 005d 27030000 		.4byte	.LASF6
+ 646 0061 02       		.uleb128 0x2
+ 647 0062 08       		.byte	0x8
+ 648 0063 07       		.byte	0x7
+ 649 0064 B4020000 		.4byte	.LASF7
+ 650 0068 04       		.uleb128 0x4
+ 651 0069 04       		.byte	0x4
+ 652 006a 05       		.byte	0x5
+ 653 006b 696E7400 		.ascii	"int\000"
+ 654 006f 02       		.uleb128 0x2
+ 655 0070 04       		.byte	0x4
+ 656 0071 07       		.byte	0x7
+ 657 0072 A7020000 		.4byte	.LASF8
+ 658 0076 03       		.uleb128 0x3
+ 659 0077 08030000 		.4byte	.LASF10
+ 660 007b 03       		.byte	0x3
+ 661 007c 2C       		.byte	0x2c
+ 662 007d 41000000 		.4byte	0x41
+ 663 0081 05       		.uleb128 0x5
+ 664 0082 AC030000 		.4byte	.LASF11
+ 665 0086 04       		.byte	0x4
+ 666 0087 E801     		.2byte	0x1e8
+ 667 0089 2C000000 		.4byte	0x2c
+ 668 008d 05       		.uleb128 0x5
+ 669 008e 3D020000 		.4byte	.LASF12
+ 670 0092 04       		.byte	0x4
+ 671 0093 E901     		.2byte	0x1e9
+ 672 0095 3A000000 		.4byte	0x3a
+ 673 0099 02       		.uleb128 0x2
+ 674 009a 04       		.byte	0x4
+ 675 009b 04       		.byte	0x4
+ 676 009c 66000000 		.4byte	.LASF13
+ 677 00a0 02       		.uleb128 0x2
+ 678 00a1 08       		.byte	0x8
+ 679 00a2 04       		.byte	0x4
+ 680 00a3 36020000 		.4byte	.LASF14
+ 681 00a7 02       		.uleb128 0x2
+ 682 00a8 01       		.byte	0x1
+ 683 00a9 08       		.byte	0x8
+ 684 00aa 3C030000 		.4byte	.LASF15
+ 685 00ae 02       		.uleb128 0x2
+ 686 00af 08       		.byte	0x8
+ 687 00b0 04       		.byte	0x4
+ 688 00b1 BB030000 		.4byte	.LASF16
+ 689 00b5 02       		.uleb128 0x2
+ 690 00b6 04       		.byte	0x4
+ 691 00b7 07       		.byte	0x7
+ 692 00b8 10030000 		.4byte	.LASF17
+ 693 00bc 06       		.uleb128 0x6
+ 694 00bd AF010000 		.4byte	.LASF18
+ 695 00c1 01       		.byte	0x1
+ 696 00c2 79       		.byte	0x79
+ 697 00c3 00000000 		.4byte	.LFB66
+ 698 00c7 A0000000 		.4byte	.LFE66-.LFB66
+ 699 00cb 01       		.uleb128 0x1
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 17
+
+
+ 700 00cc 9C       		.byte	0x9c
+ 701 00cd 0F010000 		.4byte	0x10f
+ 702 00d1 07       		.uleb128 0x7
+ 703 00d2 02000000 		.4byte	.LBB2
+ 704 00d6 6A000000 		.4byte	.LBE2-.LBB2
+ 705 00da F5000000 		.4byte	0xf5
+ 706 00de 08       		.uleb128 0x8
+ 707 00df 6900     		.ascii	"i\000"
+ 708 00e1 01       		.byte	0x1
+ 709 00e2 7B       		.byte	0x7b
+ 710 00e3 81000000 		.4byte	0x81
+ 711 00e7 00000000 		.4byte	.LLST0
+ 712 00eb 09       		.uleb128 0x9
+ 713 00ec 40000000 		.4byte	.LVL8
+ 714 00f0 A4040000 		.4byte	0x4a4
+ 715 00f4 00       		.byte	0
+ 716 00f5 0A       		.uleb128 0xa
+ 717 00f6 74000000 		.4byte	.LVL15
+ 718 00fa AF040000 		.4byte	0x4af
+ 719 00fe 0B       		.uleb128 0xb
+ 720 00ff 01       		.uleb128 0x1
+ 721 0100 50       		.byte	0x50
+ 722 0101 05       		.uleb128 0x5
+ 723 0102 03       		.byte	0x3
+ 724 0103 00000000 		.4byte	waveData
+ 725 0107 0B       		.uleb128 0xb
+ 726 0108 01       		.uleb128 0x1
+ 727 0109 51       		.byte	0x51
+ 728 010a 02       		.uleb128 0x2
+ 729 010b 08       		.byte	0x8
+ 730 010c 40       		.byte	0x40
+ 731 010d 00       		.byte	0
+ 732 010e 00       		.byte	0
+ 733 010f 0C       		.uleb128 0xc
+ 734 0110 6C000000 		.4byte	.LASF19
+ 735 0114 01       		.byte	0x1
+ 736 0115 83       		.byte	0x83
+ 737 0116 00000000 		.4byte	.LFB67
+ 738 011a 20000000 		.4byte	.LFE67-.LFB67
+ 739 011e 01       		.uleb128 0x1
+ 740 011f 9C       		.byte	0x9c
+ 741 0120 34010000 		.4byte	0x134
+ 742 0124 0A       		.uleb128 0xa
+ 743 0125 1A000000 		.4byte	.LVL17
+ 744 0129 BA040000 		.4byte	0x4ba
+ 745 012d 0B       		.uleb128 0xb
+ 746 012e 01       		.uleb128 0x1
+ 747 012f 51       		.byte	0x51
+ 748 0130 01       		.uleb128 0x1
+ 749 0131 31       		.byte	0x31
+ 750 0132 00       		.byte	0
+ 751 0133 00       		.byte	0
+ 752 0134 0C       		.uleb128 0xc
+ 753 0135 45000000 		.4byte	.LASF20
+ 754 0139 01       		.byte	0x1
+ 755 013a 35       		.byte	0x35
+ 756 013b 00000000 		.4byte	.LFB65
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 18
+
+
+ 757 013f 50010000 		.4byte	.LFE65-.LFB65
+ 758 0143 01       		.uleb128 0x1
+ 759 0144 9C       		.byte	0x9c
+ 760 0145 33030000 		.4byte	0x333
+ 761 0149 0D       		.uleb128 0xd
+ 762 014a 19030000 		.4byte	.LASF21
+ 763 014e 01       		.byte	0x1
+ 764 014f 37       		.byte	0x37
+ 765 0150 33030000 		.4byte	0x333
+ 766 0154 02       		.uleb128 0x2
+ 767 0155 91       		.byte	0x91
+ 768 0156 68       		.sleb128 -24
+ 769 0157 0E       		.uleb128 0xe
+ 770 0158 C0010000 		.4byte	.LASF22
+ 771 015c 01       		.byte	0x1
+ 772 015d 38       		.byte	0x38
+ 773 015e 81000000 		.4byte	0x81
+ 774 0162 2A000000 		.4byte	.LLST1
+ 775 0166 0E       		.uleb128 0xe
+ 776 0167 65030000 		.4byte	.LASF23
+ 777 016b 01       		.byte	0x1
+ 778 016c 39       		.byte	0x39
+ 779 016d 81000000 		.4byte	0x81
+ 780 0171 8F000000 		.4byte	.LLST2
+ 781 0175 0E       		.uleb128 0xe
+ 782 0176 FE010000 		.4byte	.LASF24
+ 783 017a 01       		.byte	0x1
+ 784 017b 5E       		.byte	0x5e
+ 785 017c 8D000000 		.4byte	0x8d
+ 786 0180 01010000 		.4byte	.LLST3
+ 787 0184 0F       		.uleb128 0xf
+ 788 0185 00000000 		.4byte	.Ldebug_ranges0+0
+ 789 0189 9F010000 		.4byte	0x19f
+ 790 018d 0D       		.uleb128 0xd
+ 791 018e D3030000 		.4byte	.LASF25
+ 792 0192 01       		.byte	0x1
+ 793 0193 60       		.byte	0x60
+ 794 0194 8D000000 		.4byte	0x8d
+ 795 0198 05       		.uleb128 0x5
+ 796 0199 03       		.byte	0x3
+ 797 019a 00000000 		.4byte	prevPos.7234
+ 798 019e 00       		.byte	0
+ 799 019f 10       		.uleb128 0x10
+ 800 01a0 0A000000 		.4byte	.LVL19
+ 801 01a4 C5040000 		.4byte	0x4c5
+ 802 01a8 B2010000 		.4byte	0x1b2
+ 803 01ac 0B       		.uleb128 0xb
+ 804 01ad 01       		.uleb128 0x1
+ 805 01ae 50       		.byte	0x50
+ 806 01af 01       		.uleb128 0x1
+ 807 01b0 31       		.byte	0x31
+ 808 01b1 00       		.byte	0
+ 809 01b2 10       		.uleb128 0x10
+ 810 01b3 34000000 		.4byte	.LVL23
+ 811 01b7 D0040000 		.4byte	0x4d0
+ 812 01bb C5010000 		.4byte	0x1c5
+ 813 01bf 0B       		.uleb128 0xb
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 19
+
+
+ 814 01c0 01       		.uleb128 0x1
+ 815 01c1 50       		.byte	0x50
+ 816 01c2 01       		.uleb128 0x1
+ 817 01c3 31       		.byte	0x31
+ 818 01c4 00       		.byte	0
+ 819 01c5 10       		.uleb128 0x10
+ 820 01c6 3C000000 		.4byte	.LVL24
+ 821 01ca DB040000 		.4byte	0x4db
+ 822 01ce DD010000 		.4byte	0x1dd
+ 823 01d2 0B       		.uleb128 0xb
+ 824 01d3 01       		.uleb128 0x1
+ 825 01d4 50       		.byte	0x50
+ 826 01d5 01       		.uleb128 0x1
+ 827 01d6 30       		.byte	0x30
+ 828 01d7 0B       		.uleb128 0xb
+ 829 01d8 01       		.uleb128 0x1
+ 830 01d9 51       		.byte	0x51
+ 831 01da 01       		.uleb128 0x1
+ 832 01db 30       		.byte	0x30
+ 833 01dc 00       		.byte	0
+ 834 01dd 10       		.uleb128 0x10
+ 835 01de 42000000 		.4byte	.LVL25
+ 836 01e2 E6040000 		.4byte	0x4e6
+ 837 01e6 F4010000 		.4byte	0x1f4
+ 838 01ea 0B       		.uleb128 0xb
+ 839 01eb 01       		.uleb128 0x1
+ 840 01ec 50       		.byte	0x50
+ 841 01ed 05       		.uleb128 0x5
+ 842 01ee 03       		.byte	0x3
+ 843 01ef 00000000 		.4byte	.LC0
+ 844 01f3 00       		.byte	0
+ 845 01f4 10       		.uleb128 0x10
+ 846 01f5 50000000 		.4byte	.LVL26
+ 847 01f9 F1040000 		.4byte	0x4f1
+ 848 01fd 16020000 		.4byte	0x216
+ 849 0201 0B       		.uleb128 0xb
+ 850 0202 01       		.uleb128 0x1
+ 851 0203 50       		.byte	0x50
+ 852 0204 02       		.uleb128 0x2
+ 853 0205 7D       		.byte	0x7d
+ 854 0206 00       		.sleb128 0
+ 855 0207 0B       		.uleb128 0xb
+ 856 0208 01       		.uleb128 0x1
+ 857 0209 51       		.byte	0x51
+ 858 020a 01       		.uleb128 0x1
+ 859 020b 40       		.byte	0x40
+ 860 020c 0B       		.uleb128 0xb
+ 861 020d 01       		.uleb128 0x1
+ 862 020e 52       		.byte	0x52
+ 863 020f 05       		.uleb128 0x5
+ 864 0210 03       		.byte	0x3
+ 865 0211 08000000 		.4byte	.LC1
+ 866 0215 00       		.byte	0
+ 867 0216 10       		.uleb128 0x10
+ 868 0217 58000000 		.4byte	.LVL27
+ 869 021b DB040000 		.4byte	0x4db
+ 870 021f 2E020000 		.4byte	0x22e
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 20
+
+
+ 871 0223 0B       		.uleb128 0xb
+ 872 0224 01       		.uleb128 0x1
+ 873 0225 50       		.byte	0x50
+ 874 0226 01       		.uleb128 0x1
+ 875 0227 31       		.byte	0x31
+ 876 0228 0B       		.uleb128 0xb
+ 877 0229 01       		.uleb128 0x1
+ 878 022a 51       		.byte	0x51
+ 879 022b 01       		.uleb128 0x1
+ 880 022c 30       		.byte	0x30
+ 881 022d 00       		.byte	0
+ 882 022e 10       		.uleb128 0x10
+ 883 022f 5E000000 		.4byte	.LVL28
+ 884 0233 E6040000 		.4byte	0x4e6
+ 885 0237 42020000 		.4byte	0x242
+ 886 023b 0B       		.uleb128 0xb
+ 887 023c 01       		.uleb128 0x1
+ 888 023d 50       		.byte	0x50
+ 889 023e 02       		.uleb128 0x2
+ 890 023f 7D       		.byte	0x7d
+ 891 0240 00       		.sleb128 0
+ 892 0241 00       		.byte	0
+ 893 0242 10       		.uleb128 0x10
+ 894 0243 64000000 		.4byte	.LVL29
+ 895 0247 FC040000 		.4byte	0x4fc
+ 896 024b 56020000 		.4byte	0x256
+ 897 024f 0B       		.uleb128 0xb
+ 898 0250 01       		.uleb128 0x1
+ 899 0251 50       		.byte	0x50
+ 900 0252 02       		.uleb128 0x2
+ 901 0253 08       		.byte	0x8
+ 902 0254 64       		.byte	0x64
+ 903 0255 00       		.byte	0
+ 904 0256 10       		.uleb128 0x10
+ 905 0257 6E000000 		.4byte	.LVL32
+ 906 025b C5040000 		.4byte	0x4c5
+ 907 025f 69020000 		.4byte	0x269
+ 908 0263 0B       		.uleb128 0xb
+ 909 0264 01       		.uleb128 0x1
+ 910 0265 50       		.byte	0x50
+ 911 0266 01       		.uleb128 0x1
+ 912 0267 32       		.byte	0x32
+ 913 0268 00       		.byte	0
+ 914 0269 10       		.uleb128 0x10
+ 915 026a 8E000000 		.4byte	.LVL35
+ 916 026e D0040000 		.4byte	0x4d0
+ 917 0272 7C020000 		.4byte	0x27c
+ 918 0276 0B       		.uleb128 0xb
+ 919 0277 01       		.uleb128 0x1
+ 920 0278 50       		.byte	0x50
+ 921 0279 01       		.uleb128 0x1
+ 922 027a 31       		.byte	0x31
+ 923 027b 00       		.byte	0
+ 924 027c 10       		.uleb128 0x10
+ 925 027d 96000000 		.4byte	.LVL36
+ 926 0281 DB040000 		.4byte	0x4db
+ 927 0285 94020000 		.4byte	0x294
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 21
+
+
+ 928 0289 0B       		.uleb128 0xb
+ 929 028a 01       		.uleb128 0x1
+ 930 028b 50       		.byte	0x50
+ 931 028c 01       		.uleb128 0x1
+ 932 028d 30       		.byte	0x30
+ 933 028e 0B       		.uleb128 0xb
+ 934 028f 01       		.uleb128 0x1
+ 935 0290 51       		.byte	0x51
+ 936 0291 01       		.uleb128 0x1
+ 937 0292 30       		.byte	0x30
+ 938 0293 00       		.byte	0
+ 939 0294 10       		.uleb128 0x10
+ 940 0295 9C000000 		.4byte	.LVL37
+ 941 0299 E6040000 		.4byte	0x4e6
+ 942 029d AB020000 		.4byte	0x2ab
+ 943 02a1 0B       		.uleb128 0xb
+ 944 02a2 01       		.uleb128 0x1
+ 945 02a3 50       		.byte	0x50
+ 946 02a4 05       		.uleb128 0x5
+ 947 02a5 03       		.byte	0x3
+ 948 02a6 14000000 		.4byte	.LC2
+ 949 02aa 00       		.byte	0
+ 950 02ab 10       		.uleb128 0x10
+ 951 02ac AA000000 		.4byte	.LVL38
+ 952 02b0 F1040000 		.4byte	0x4f1
+ 953 02b4 CD020000 		.4byte	0x2cd
+ 954 02b8 0B       		.uleb128 0xb
+ 955 02b9 01       		.uleb128 0x1
+ 956 02ba 50       		.byte	0x50
+ 957 02bb 02       		.uleb128 0x2
+ 958 02bc 7D       		.byte	0x7d
+ 959 02bd 00       		.sleb128 0
+ 960 02be 0B       		.uleb128 0xb
+ 961 02bf 01       		.uleb128 0x1
+ 962 02c0 51       		.byte	0x51
+ 963 02c1 01       		.uleb128 0x1
+ 964 02c2 40       		.byte	0x40
+ 965 02c3 0B       		.uleb128 0xb
+ 966 02c4 01       		.uleb128 0x1
+ 967 02c5 52       		.byte	0x52
+ 968 02c6 05       		.uleb128 0x5
+ 969 02c7 03       		.byte	0x3
+ 970 02c8 08000000 		.4byte	.LC1
+ 971 02cc 00       		.byte	0
+ 972 02cd 10       		.uleb128 0x10
+ 973 02ce B2000000 		.4byte	.LVL39
+ 974 02d2 DB040000 		.4byte	0x4db
+ 975 02d6 E5020000 		.4byte	0x2e5
+ 976 02da 0B       		.uleb128 0xb
+ 977 02db 01       		.uleb128 0x1
+ 978 02dc 50       		.byte	0x50
+ 979 02dd 01       		.uleb128 0x1
+ 980 02de 31       		.byte	0x31
+ 981 02df 0B       		.uleb128 0xb
+ 982 02e0 01       		.uleb128 0x1
+ 983 02e1 51       		.byte	0x51
+ 984 02e2 01       		.uleb128 0x1
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 22
+
+
+ 985 02e3 30       		.byte	0x30
+ 986 02e4 00       		.byte	0
+ 987 02e5 10       		.uleb128 0x10
+ 988 02e6 B8000000 		.4byte	.LVL40
+ 989 02ea E6040000 		.4byte	0x4e6
+ 990 02ee F9020000 		.4byte	0x2f9
+ 991 02f2 0B       		.uleb128 0xb
+ 992 02f3 01       		.uleb128 0x1
+ 993 02f4 50       		.byte	0x50
+ 994 02f5 02       		.uleb128 0x2
+ 995 02f6 7D       		.byte	0x7d
+ 996 02f7 00       		.sleb128 0
+ 997 02f8 00       		.byte	0
+ 998 02f9 10       		.uleb128 0x10
+ 999 02fa BE000000 		.4byte	.LVL41
+ 1000 02fe FC040000 		.4byte	0x4fc
+ 1001 0302 0D030000 		.4byte	0x30d
+ 1002 0306 0B       		.uleb128 0xb
+ 1003 0307 01       		.uleb128 0x1
+ 1004 0308 50       		.byte	0x50
+ 1005 0309 02       		.uleb128 0x2
+ 1006 030a 08       		.byte	0x8
+ 1007 030b 64       		.byte	0x64
+ 1008 030c 00       		.byte	0
+ 1009 030d 10       		.uleb128 0x10
+ 1010 030e C4000000 		.4byte	.LVL42
+ 1011 0312 07050000 		.4byte	0x507
+ 1012 0316 20030000 		.4byte	0x320
+ 1013 031a 0B       		.uleb128 0xb
+ 1014 031b 01       		.uleb128 0x1
+ 1015 031c 50       		.byte	0x50
+ 1016 031d 01       		.uleb128 0x1
+ 1017 031e 30       		.byte	0x30
+ 1018 031f 00       		.byte	0
+ 1019 0320 09       		.uleb128 0x9
+ 1020 0321 32010000 		.4byte	.LVL51
+ 1021 0325 0F010000 		.4byte	0x10f
+ 1022 0329 09       		.uleb128 0x9
+ 1023 032a 38010000 		.4byte	.LVL52
+ 1024 032e BC000000 		.4byte	0xbc
+ 1025 0332 00       		.byte	0
+ 1026 0333 11       		.uleb128 0x11
+ 1027 0334 A7000000 		.4byte	0xa7
+ 1028 0338 43030000 		.4byte	0x343
+ 1029 033c 12       		.uleb128 0x12
+ 1030 033d B5000000 		.4byte	0xb5
+ 1031 0341 0F       		.byte	0xf
+ 1032 0342 00       		.byte	0
+ 1033 0343 13       		.uleb128 0x13
+ 1034 0344 E2020000 		.4byte	.LASF54
+ 1035 0348 01       		.byte	0x1
+ 1036 0349 13       		.byte	0x13
+ 1037 034a 68000000 		.4byte	0x68
+ 1038 034e 00000000 		.4byte	.LFB64
+ 1039 0352 54000000 		.4byte	.LFE64-.LFB64
+ 1040 0356 01       		.uleb128 0x1
+ 1041 0357 9C       		.byte	0x9c
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 23
+
+
+ 1042 0358 FA030000 		.4byte	0x3fa
+ 1043 035c 09       		.uleb128 0x9
+ 1044 035d 08000000 		.4byte	.LVL54
+ 1045 0361 12050000 		.4byte	0x512
+ 1046 0365 09       		.uleb128 0x9
+ 1047 0366 0C000000 		.4byte	.LVL55
+ 1048 036a 1D050000 		.4byte	0x51d
+ 1049 036e 09       		.uleb128 0x9
+ 1050 036f 10000000 		.4byte	.LVL56
+ 1051 0373 28050000 		.4byte	0x528
+ 1052 0377 10       		.uleb128 0x10
+ 1053 0378 16000000 		.4byte	.LVL57
+ 1054 037c D0040000 		.4byte	0x4d0
+ 1055 0380 8A030000 		.4byte	0x38a
+ 1056 0384 0B       		.uleb128 0xb
+ 1057 0385 01       		.uleb128 0x1
+ 1058 0386 50       		.byte	0x50
+ 1059 0387 01       		.uleb128 0x1
+ 1060 0388 31       		.byte	0x31
+ 1061 0389 00       		.byte	0
+ 1062 038a 09       		.uleb128 0x9
+ 1063 038b 1A000000 		.4byte	.LVL58
+ 1064 038f BC000000 		.4byte	0xbc
+ 1065 0393 10       		.uleb128 0x10
+ 1066 0394 22000000 		.4byte	.LVL59
+ 1067 0398 AF040000 		.4byte	0x4af
+ 1068 039c B0030000 		.4byte	0x3b0
+ 1069 03a0 0B       		.uleb128 0xb
+ 1070 03a1 01       		.uleb128 0x1
+ 1071 03a2 50       		.byte	0x50
+ 1072 03a3 05       		.uleb128 0x5
+ 1073 03a4 03       		.byte	0x3
+ 1074 03a5 00000000 		.4byte	waveData
+ 1075 03a9 0B       		.uleb128 0xb
+ 1076 03aa 01       		.uleb128 0x1
+ 1077 03ab 51       		.byte	0x51
+ 1078 03ac 02       		.uleb128 0x2
+ 1079 03ad 08       		.byte	0x8
+ 1080 03ae 40       		.byte	0x40
+ 1081 03af 00       		.byte	0
+ 1082 03b0 09       		.uleb128 0x9
+ 1083 03b1 26000000 		.4byte	.LVL60
+ 1084 03b5 33050000 		.4byte	0x533
+ 1085 03b9 10       		.uleb128 0x10
+ 1086 03ba 34000000 		.4byte	.LVL61
+ 1087 03be BA040000 		.4byte	0x4ba
+ 1088 03c2 CC030000 		.4byte	0x3cc
+ 1089 03c6 0B       		.uleb128 0xb
+ 1090 03c7 01       		.uleb128 0x1
+ 1091 03c8 51       		.byte	0x51
+ 1092 03c9 01       		.uleb128 0x1
+ 1093 03ca 31       		.byte	0x31
+ 1094 03cb 00       		.byte	0
+ 1095 03cc 09       		.uleb128 0x9
+ 1096 03cd 38000000 		.4byte	.LVL62
+ 1097 03d1 3E050000 		.4byte	0x53e
+ 1098 03d5 09       		.uleb128 0x9
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 24
+
+
+ 1099 03d6 3C000000 		.4byte	.LVL63
+ 1100 03da 49050000 		.4byte	0x549
+ 1101 03de 09       		.uleb128 0x9
+ 1102 03df 42000000 		.4byte	.LVL64
+ 1103 03e3 54050000 		.4byte	0x554
+ 1104 03e7 09       		.uleb128 0x9
+ 1105 03e8 46000000 		.4byte	.LVL65
+ 1106 03ec 5F050000 		.4byte	0x55f
+ 1107 03f0 09       		.uleb128 0x9
+ 1108 03f1 4A000000 		.4byte	.LVL66
+ 1109 03f5 34010000 		.4byte	0x134
+ 1110 03f9 00       		.byte	0
+ 1111 03fa 0C       		.uleb128 0xc
+ 1112 03fb 5B000000 		.4byte	.LASF26
+ 1113 03ff 01       		.byte	0x1
+ 1114 0400 8A       		.byte	0x8a
+ 1115 0401 00000000 		.4byte	.LFB68
+ 1116 0405 02000000 		.4byte	.LFE68-.LFB68
+ 1117 0409 01       		.uleb128 0x1
+ 1118 040a 9C       		.byte	0x9c
+ 1119 040b 1D040000 		.4byte	0x41d
+ 1120 040f 14       		.uleb128 0x14
+ 1121 0410 EE030000 		.4byte	.LASF55
+ 1122 0414 01       		.byte	0x1
+ 1123 0415 8A       		.byte	0x8a
+ 1124 0416 81000000 		.4byte	0x81
+ 1125 041a 01       		.uleb128 0x1
+ 1126 041b 50       		.byte	0x50
+ 1127 041c 00       		.byte	0
+ 1128 041d 15       		.uleb128 0x15
+ 1129 041e 05020000 		.4byte	.LASF27
+ 1130 0422 05       		.byte	0x5
+ 1131 0423 1207     		.2byte	0x712
+ 1132 0425 29040000 		.4byte	0x429
+ 1133 0429 16       		.uleb128 0x16
+ 1134 042a 76000000 		.4byte	0x76
+ 1135 042e 17       		.uleb128 0x17
+ 1136 042f 31000000 		.4byte	.LASF28
+ 1137 0433 01       		.byte	0x1
+ 1138 0434 0C       		.byte	0xc
+ 1139 0435 68000000 		.4byte	0x68
+ 1140 0439 05       		.uleb128 0x5
+ 1141 043a 03       		.byte	0x3
+ 1142 043b 00000000 		.4byte	amplitude
+ 1143 043f 17       		.uleb128 0x17
+ 1144 0440 97030000 		.4byte	.LASF29
+ 1145 0444 01       		.byte	0x1
+ 1146 0445 0D       		.byte	0xd
+ 1147 0446 68000000 		.4byte	0x68
+ 1148 044a 05       		.uleb128 0x5
+ 1149 044b 03       		.byte	0x3
+ 1150 044c 00000000 		.4byte	theoreticalAmplitude
+ 1151 0450 11       		.uleb128 0x11
+ 1152 0451 81000000 		.4byte	0x81
+ 1153 0455 60040000 		.4byte	0x460
+ 1154 0459 12       		.uleb128 0x12
+ 1155 045a B5000000 		.4byte	0xb5
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 25
+
+
+ 1156 045e 3F       		.byte	0x3f
+ 1157 045f 00       		.byte	0
+ 1158 0460 17       		.uleb128 0x17
+ 1159 0461 5E020000 		.4byte	.LASF30
+ 1160 0465 01       		.byte	0x1
+ 1161 0466 0E       		.byte	0xe
+ 1162 0467 50040000 		.4byte	0x450
+ 1163 046b 05       		.uleb128 0x5
+ 1164 046c 03       		.byte	0x3
+ 1165 046d 00000000 		.4byte	waveData
+ 1166 0471 17       		.uleb128 0x17
+ 1167 0472 D8020000 		.4byte	.LASF31
+ 1168 0476 01       		.byte	0x1
+ 1169 0477 0F       		.byte	0xf
+ 1170 0478 8D000000 		.4byte	0x8d
+ 1171 047c 05       		.uleb128 0x5
+ 1172 047d 03       		.byte	0x3
+ 1173 047e 00000000 		.4byte	frequency
+ 1174 0482 17       		.uleb128 0x17
+ 1175 0483 E7020000 		.4byte	.LASF32
+ 1176 0487 01       		.byte	0x1
+ 1177 0488 10       		.byte	0x10
+ 1178 0489 8D000000 		.4byte	0x8d
+ 1179 048d 05       		.uleb128 0x5
+ 1180 048e 03       		.byte	0x3
+ 1181 048f 00000000 		.4byte	clockDivider
+ 1182 0493 17       		.uleb128 0x17
+ 1183 0494 3B000000 		.4byte	.LASF33
+ 1184 0498 01       		.byte	0x1
+ 1185 0499 11       		.byte	0x11
+ 1186 049a 81000000 		.4byte	0x81
+ 1187 049e 05       		.uleb128 0x5
+ 1188 049f 03       		.byte	0x3
+ 1189 04a0 00000000 		.4byte	barLength
+ 1190 04a4 18       		.uleb128 0x18
+ 1191 04a5 73696E00 		.ascii	"sin\000"
+ 1192 04a9 73696E00 		.ascii	"sin\000"
+ 1193 04ad 0D       		.byte	0xd
+ 1194 04ae 6F       		.byte	0x6f
+ 1195 04af 19       		.uleb128 0x19
+ 1196 04b0 14000000 		.4byte	.LASF34
+ 1197 04b4 14000000 		.4byte	.LASF34
+ 1198 04b8 06       		.byte	0x6
+ 1199 04b9 6E       		.byte	0x6e
+ 1200 04ba 19       		.uleb128 0x19
+ 1201 04bb E3010000 		.4byte	.LASF35
+ 1202 04bf E3010000 		.4byte	.LASF35
+ 1203 04c3 07       		.byte	0x7
+ 1204 04c4 2F       		.byte	0x2f
+ 1205 04c5 19       		.uleb128 0x19
+ 1206 04c6 76030000 		.4byte	.LASF36
+ 1207 04ca 76030000 		.4byte	.LASF36
+ 1208 04ce 08       		.byte	0x8
+ 1209 04cf 9D       		.byte	0x9d
+ 1210 04d0 19       		.uleb128 0x19
+ 1211 04d1 41030000 		.4byte	.LASF37
+ 1212 04d5 41030000 		.4byte	.LASF37
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 26
+
+
+ 1213 04d9 09       		.byte	0x9
+ 1214 04da 3A       		.byte	0x3a
+ 1215 04db 19       		.uleb128 0x19
+ 1216 04dc CB020000 		.4byte	.LASF38
+ 1217 04e0 CB020000 		.4byte	.LASF38
+ 1218 04e4 09       		.byte	0x9
+ 1219 04e5 3D       		.byte	0x3d
+ 1220 04e6 19       		.uleb128 0x19
+ 1221 04e7 4E020000 		.4byte	.LASF39
+ 1222 04eb 4E020000 		.4byte	.LASF39
+ 1223 04ef 09       		.byte	0x9
+ 1224 04f0 3C       		.byte	0x3c
+ 1225 04f1 19       		.uleb128 0x19
+ 1226 04f2 28000000 		.4byte	.LASF40
+ 1227 04f6 28000000 		.4byte	.LASF40
+ 1228 04fa 0A       		.byte	0xa
+ 1229 04fb FD       		.byte	0xfd
+ 1230 04fc 19       		.uleb128 0x19
+ 1231 04fd F5030000 		.4byte	.LASF41
+ 1232 0501 F5030000 		.4byte	.LASF41
+ 1233 0505 0B       		.byte	0xb
+ 1234 0506 76       		.byte	0x76
+ 1235 0507 19       		.uleb128 0x19
+ 1236 0508 8B020000 		.4byte	.LASF42
+ 1237 050c 8B020000 		.4byte	.LASF42
+ 1238 0510 08       		.byte	0x8
+ 1239 0511 A7       		.byte	0xa7
+ 1240 0512 19       		.uleb128 0x19
+ 1241 0513 52030000 		.4byte	.LASF43
+ 1242 0517 52030000 		.4byte	.LASF43
+ 1243 051b 0C       		.byte	0xc
+ 1244 051c 93       		.byte	0x93
+ 1245 051d 19       		.uleb128 0x19
+ 1246 051e 67020000 		.4byte	.LASF44
+ 1247 0522 67020000 		.4byte	.LASF44
+ 1248 0526 08       		.byte	0x8
+ 1249 0527 97       		.byte	0x97
+ 1250 0528 19       		.uleb128 0x19
+ 1251 0529 00000000 		.4byte	.LASF45
+ 1252 052d 00000000 		.4byte	.LASF45
+ 1253 0531 09       		.byte	0x9
+ 1254 0532 38       		.byte	0x38
+ 1255 0533 19       		.uleb128 0x19
+ 1256 0534 81000000 		.4byte	.LASF46
+ 1257 0538 81000000 		.4byte	.LASF46
+ 1258 053c 06       		.byte	0x6
+ 1259 053d 67       		.byte	0x67
+ 1260 053e 19       		.uleb128 0x19
+ 1261 053f A1010000 		.4byte	.LASF47
+ 1262 0543 A1010000 		.4byte	.LASF47
+ 1263 0547 07       		.byte	0x7
+ 1264 0548 27       		.byte	0x27
+ 1265 0549 19       		.uleb128 0x19
+ 1266 054a F4020000 		.4byte	.LASF48
+ 1267 054e F4020000 		.4byte	.LASF48
+ 1268 0552 0C       		.byte	0xc
+ 1269 0553 99       		.byte	0x99
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 27
+
+
+ 1270 0554 19       		.uleb128 0x19
+ 1271 0555 12020000 		.4byte	.LASF49
+ 1272 0559 12020000 		.4byte	.LASF49
+ 1273 055d 08       		.byte	0x8
+ 1274 055e 9B       		.byte	0x9b
+ 1275 055f 19       		.uleb128 0x19
+ 1276 0560 90000000 		.4byte	.LASF50
+ 1277 0564 90000000 		.4byte	.LASF50
+ 1278 0568 0C       		.byte	0xc
+ 1279 0569 9B       		.byte	0x9b
+ 1280 056a 00       		.byte	0
+ 1281              		.section	.debug_abbrev,"",%progbits
+ 1282              	.Ldebug_abbrev0:
+ 1283 0000 01       		.uleb128 0x1
+ 1284 0001 11       		.uleb128 0x11
+ 1285 0002 01       		.byte	0x1
+ 1286 0003 25       		.uleb128 0x25
+ 1287 0004 0E       		.uleb128 0xe
+ 1288 0005 13       		.uleb128 0x13
+ 1289 0006 0B       		.uleb128 0xb
+ 1290 0007 03       		.uleb128 0x3
+ 1291 0008 0E       		.uleb128 0xe
+ 1292 0009 1B       		.uleb128 0x1b
+ 1293 000a 0E       		.uleb128 0xe
+ 1294 000b 55       		.uleb128 0x55
+ 1295 000c 17       		.uleb128 0x17
+ 1296 000d 11       		.uleb128 0x11
+ 1297 000e 01       		.uleb128 0x1
+ 1298 000f 10       		.uleb128 0x10
+ 1299 0010 17       		.uleb128 0x17
+ 1300 0011 00       		.byte	0
+ 1301 0012 00       		.byte	0
+ 1302 0013 02       		.uleb128 0x2
+ 1303 0014 24       		.uleb128 0x24
+ 1304 0015 00       		.byte	0
+ 1305 0016 0B       		.uleb128 0xb
+ 1306 0017 0B       		.uleb128 0xb
+ 1307 0018 3E       		.uleb128 0x3e
+ 1308 0019 0B       		.uleb128 0xb
+ 1309 001a 03       		.uleb128 0x3
+ 1310 001b 0E       		.uleb128 0xe
+ 1311 001c 00       		.byte	0
+ 1312 001d 00       		.byte	0
+ 1313 001e 03       		.uleb128 0x3
+ 1314 001f 16       		.uleb128 0x16
+ 1315 0020 00       		.byte	0
+ 1316 0021 03       		.uleb128 0x3
+ 1317 0022 0E       		.uleb128 0xe
+ 1318 0023 3A       		.uleb128 0x3a
+ 1319 0024 0B       		.uleb128 0xb
+ 1320 0025 3B       		.uleb128 0x3b
+ 1321 0026 0B       		.uleb128 0xb
+ 1322 0027 49       		.uleb128 0x49
+ 1323 0028 13       		.uleb128 0x13
+ 1324 0029 00       		.byte	0
+ 1325 002a 00       		.byte	0
+ 1326 002b 04       		.uleb128 0x4
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 28
+
+
+ 1327 002c 24       		.uleb128 0x24
+ 1328 002d 00       		.byte	0
+ 1329 002e 0B       		.uleb128 0xb
+ 1330 002f 0B       		.uleb128 0xb
+ 1331 0030 3E       		.uleb128 0x3e
+ 1332 0031 0B       		.uleb128 0xb
+ 1333 0032 03       		.uleb128 0x3
+ 1334 0033 08       		.uleb128 0x8
+ 1335 0034 00       		.byte	0
+ 1336 0035 00       		.byte	0
+ 1337 0036 05       		.uleb128 0x5
+ 1338 0037 16       		.uleb128 0x16
+ 1339 0038 00       		.byte	0
+ 1340 0039 03       		.uleb128 0x3
+ 1341 003a 0E       		.uleb128 0xe
+ 1342 003b 3A       		.uleb128 0x3a
+ 1343 003c 0B       		.uleb128 0xb
+ 1344 003d 3B       		.uleb128 0x3b
+ 1345 003e 05       		.uleb128 0x5
+ 1346 003f 49       		.uleb128 0x49
+ 1347 0040 13       		.uleb128 0x13
+ 1348 0041 00       		.byte	0
+ 1349 0042 00       		.byte	0
+ 1350 0043 06       		.uleb128 0x6
+ 1351 0044 2E       		.uleb128 0x2e
+ 1352 0045 01       		.byte	0x1
+ 1353 0046 3F       		.uleb128 0x3f
+ 1354 0047 19       		.uleb128 0x19
+ 1355 0048 03       		.uleb128 0x3
+ 1356 0049 0E       		.uleb128 0xe
+ 1357 004a 3A       		.uleb128 0x3a
+ 1358 004b 0B       		.uleb128 0xb
+ 1359 004c 3B       		.uleb128 0x3b
+ 1360 004d 0B       		.uleb128 0xb
+ 1361 004e 27       		.uleb128 0x27
+ 1362 004f 19       		.uleb128 0x19
+ 1363 0050 11       		.uleb128 0x11
+ 1364 0051 01       		.uleb128 0x1
+ 1365 0052 12       		.uleb128 0x12
+ 1366 0053 06       		.uleb128 0x6
+ 1367 0054 40       		.uleb128 0x40
+ 1368 0055 18       		.uleb128 0x18
+ 1369 0056 9642     		.uleb128 0x2116
+ 1370 0058 19       		.uleb128 0x19
+ 1371 0059 01       		.uleb128 0x1
+ 1372 005a 13       		.uleb128 0x13
+ 1373 005b 00       		.byte	0
+ 1374 005c 00       		.byte	0
+ 1375 005d 07       		.uleb128 0x7
+ 1376 005e 0B       		.uleb128 0xb
+ 1377 005f 01       		.byte	0x1
+ 1378 0060 11       		.uleb128 0x11
+ 1379 0061 01       		.uleb128 0x1
+ 1380 0062 12       		.uleb128 0x12
+ 1381 0063 06       		.uleb128 0x6
+ 1382 0064 01       		.uleb128 0x1
+ 1383 0065 13       		.uleb128 0x13
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 29
+
+
+ 1384 0066 00       		.byte	0
+ 1385 0067 00       		.byte	0
+ 1386 0068 08       		.uleb128 0x8
+ 1387 0069 34       		.uleb128 0x34
+ 1388 006a 00       		.byte	0
+ 1389 006b 03       		.uleb128 0x3
+ 1390 006c 08       		.uleb128 0x8
+ 1391 006d 3A       		.uleb128 0x3a
+ 1392 006e 0B       		.uleb128 0xb
+ 1393 006f 3B       		.uleb128 0x3b
+ 1394 0070 0B       		.uleb128 0xb
+ 1395 0071 49       		.uleb128 0x49
+ 1396 0072 13       		.uleb128 0x13
+ 1397 0073 02       		.uleb128 0x2
+ 1398 0074 17       		.uleb128 0x17
+ 1399 0075 00       		.byte	0
+ 1400 0076 00       		.byte	0
+ 1401 0077 09       		.uleb128 0x9
+ 1402 0078 898201   		.uleb128 0x4109
+ 1403 007b 00       		.byte	0
+ 1404 007c 11       		.uleb128 0x11
+ 1405 007d 01       		.uleb128 0x1
+ 1406 007e 31       		.uleb128 0x31
+ 1407 007f 13       		.uleb128 0x13
+ 1408 0080 00       		.byte	0
+ 1409 0081 00       		.byte	0
+ 1410 0082 0A       		.uleb128 0xa
+ 1411 0083 898201   		.uleb128 0x4109
+ 1412 0086 01       		.byte	0x1
+ 1413 0087 11       		.uleb128 0x11
+ 1414 0088 01       		.uleb128 0x1
+ 1415 0089 31       		.uleb128 0x31
+ 1416 008a 13       		.uleb128 0x13
+ 1417 008b 00       		.byte	0
+ 1418 008c 00       		.byte	0
+ 1419 008d 0B       		.uleb128 0xb
+ 1420 008e 8A8201   		.uleb128 0x410a
+ 1421 0091 00       		.byte	0
+ 1422 0092 02       		.uleb128 0x2
+ 1423 0093 18       		.uleb128 0x18
+ 1424 0094 9142     		.uleb128 0x2111
+ 1425 0096 18       		.uleb128 0x18
+ 1426 0097 00       		.byte	0
+ 1427 0098 00       		.byte	0
+ 1428 0099 0C       		.uleb128 0xc
+ 1429 009a 2E       		.uleb128 0x2e
+ 1430 009b 01       		.byte	0x1
+ 1431 009c 3F       		.uleb128 0x3f
+ 1432 009d 19       		.uleb128 0x19
+ 1433 009e 03       		.uleb128 0x3
+ 1434 009f 0E       		.uleb128 0xe
+ 1435 00a0 3A       		.uleb128 0x3a
+ 1436 00a1 0B       		.uleb128 0xb
+ 1437 00a2 3B       		.uleb128 0x3b
+ 1438 00a3 0B       		.uleb128 0xb
+ 1439 00a4 27       		.uleb128 0x27
+ 1440 00a5 19       		.uleb128 0x19
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 30
+
+
+ 1441 00a6 11       		.uleb128 0x11
+ 1442 00a7 01       		.uleb128 0x1
+ 1443 00a8 12       		.uleb128 0x12
+ 1444 00a9 06       		.uleb128 0x6
+ 1445 00aa 40       		.uleb128 0x40
+ 1446 00ab 18       		.uleb128 0x18
+ 1447 00ac 9742     		.uleb128 0x2117
+ 1448 00ae 19       		.uleb128 0x19
+ 1449 00af 01       		.uleb128 0x1
+ 1450 00b0 13       		.uleb128 0x13
+ 1451 00b1 00       		.byte	0
+ 1452 00b2 00       		.byte	0
+ 1453 00b3 0D       		.uleb128 0xd
+ 1454 00b4 34       		.uleb128 0x34
+ 1455 00b5 00       		.byte	0
+ 1456 00b6 03       		.uleb128 0x3
+ 1457 00b7 0E       		.uleb128 0xe
+ 1458 00b8 3A       		.uleb128 0x3a
+ 1459 00b9 0B       		.uleb128 0xb
+ 1460 00ba 3B       		.uleb128 0x3b
+ 1461 00bb 0B       		.uleb128 0xb
+ 1462 00bc 49       		.uleb128 0x49
+ 1463 00bd 13       		.uleb128 0x13
+ 1464 00be 02       		.uleb128 0x2
+ 1465 00bf 18       		.uleb128 0x18
+ 1466 00c0 00       		.byte	0
+ 1467 00c1 00       		.byte	0
+ 1468 00c2 0E       		.uleb128 0xe
+ 1469 00c3 34       		.uleb128 0x34
+ 1470 00c4 00       		.byte	0
+ 1471 00c5 03       		.uleb128 0x3
+ 1472 00c6 0E       		.uleb128 0xe
+ 1473 00c7 3A       		.uleb128 0x3a
+ 1474 00c8 0B       		.uleb128 0xb
+ 1475 00c9 3B       		.uleb128 0x3b
+ 1476 00ca 0B       		.uleb128 0xb
+ 1477 00cb 49       		.uleb128 0x49
+ 1478 00cc 13       		.uleb128 0x13
+ 1479 00cd 02       		.uleb128 0x2
+ 1480 00ce 17       		.uleb128 0x17
+ 1481 00cf 00       		.byte	0
+ 1482 00d0 00       		.byte	0
+ 1483 00d1 0F       		.uleb128 0xf
+ 1484 00d2 0B       		.uleb128 0xb
+ 1485 00d3 01       		.byte	0x1
+ 1486 00d4 55       		.uleb128 0x55
+ 1487 00d5 17       		.uleb128 0x17
+ 1488 00d6 01       		.uleb128 0x1
+ 1489 00d7 13       		.uleb128 0x13
+ 1490 00d8 00       		.byte	0
+ 1491 00d9 00       		.byte	0
+ 1492 00da 10       		.uleb128 0x10
+ 1493 00db 898201   		.uleb128 0x4109
+ 1494 00de 01       		.byte	0x1
+ 1495 00df 11       		.uleb128 0x11
+ 1496 00e0 01       		.uleb128 0x1
+ 1497 00e1 31       		.uleb128 0x31
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 31
+
+
+ 1498 00e2 13       		.uleb128 0x13
+ 1499 00e3 01       		.uleb128 0x1
+ 1500 00e4 13       		.uleb128 0x13
+ 1501 00e5 00       		.byte	0
+ 1502 00e6 00       		.byte	0
+ 1503 00e7 11       		.uleb128 0x11
+ 1504 00e8 01       		.uleb128 0x1
+ 1505 00e9 01       		.byte	0x1
+ 1506 00ea 49       		.uleb128 0x49
+ 1507 00eb 13       		.uleb128 0x13
+ 1508 00ec 01       		.uleb128 0x1
+ 1509 00ed 13       		.uleb128 0x13
+ 1510 00ee 00       		.byte	0
+ 1511 00ef 00       		.byte	0
+ 1512 00f0 12       		.uleb128 0x12
+ 1513 00f1 21       		.uleb128 0x21
+ 1514 00f2 00       		.byte	0
+ 1515 00f3 49       		.uleb128 0x49
+ 1516 00f4 13       		.uleb128 0x13
+ 1517 00f5 2F       		.uleb128 0x2f
+ 1518 00f6 0B       		.uleb128 0xb
+ 1519 00f7 00       		.byte	0
+ 1520 00f8 00       		.byte	0
+ 1521 00f9 13       		.uleb128 0x13
+ 1522 00fa 2E       		.uleb128 0x2e
+ 1523 00fb 01       		.byte	0x1
+ 1524 00fc 3F       		.uleb128 0x3f
+ 1525 00fd 19       		.uleb128 0x19
+ 1526 00fe 03       		.uleb128 0x3
+ 1527 00ff 0E       		.uleb128 0xe
+ 1528 0100 3A       		.uleb128 0x3a
+ 1529 0101 0B       		.uleb128 0xb
+ 1530 0102 3B       		.uleb128 0x3b
+ 1531 0103 0B       		.uleb128 0xb
+ 1532 0104 49       		.uleb128 0x49
+ 1533 0105 13       		.uleb128 0x13
+ 1534 0106 8701     		.uleb128 0x87
+ 1535 0108 19       		.uleb128 0x19
+ 1536 0109 11       		.uleb128 0x11
+ 1537 010a 01       		.uleb128 0x1
+ 1538 010b 12       		.uleb128 0x12
+ 1539 010c 06       		.uleb128 0x6
+ 1540 010d 40       		.uleb128 0x40
+ 1541 010e 18       		.uleb128 0x18
+ 1542 010f 9742     		.uleb128 0x2117
+ 1543 0111 19       		.uleb128 0x19
+ 1544 0112 01       		.uleb128 0x1
+ 1545 0113 13       		.uleb128 0x13
+ 1546 0114 00       		.byte	0
+ 1547 0115 00       		.byte	0
+ 1548 0116 14       		.uleb128 0x14
+ 1549 0117 05       		.uleb128 0x5
+ 1550 0118 00       		.byte	0
+ 1551 0119 03       		.uleb128 0x3
+ 1552 011a 0E       		.uleb128 0xe
+ 1553 011b 3A       		.uleb128 0x3a
+ 1554 011c 0B       		.uleb128 0xb
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 32
+
+
+ 1555 011d 3B       		.uleb128 0x3b
+ 1556 011e 0B       		.uleb128 0xb
+ 1557 011f 49       		.uleb128 0x49
+ 1558 0120 13       		.uleb128 0x13
+ 1559 0121 02       		.uleb128 0x2
+ 1560 0122 18       		.uleb128 0x18
+ 1561 0123 00       		.byte	0
+ 1562 0124 00       		.byte	0
+ 1563 0125 15       		.uleb128 0x15
+ 1564 0126 34       		.uleb128 0x34
+ 1565 0127 00       		.byte	0
+ 1566 0128 03       		.uleb128 0x3
+ 1567 0129 0E       		.uleb128 0xe
+ 1568 012a 3A       		.uleb128 0x3a
+ 1569 012b 0B       		.uleb128 0xb
+ 1570 012c 3B       		.uleb128 0x3b
+ 1571 012d 05       		.uleb128 0x5
+ 1572 012e 49       		.uleb128 0x49
+ 1573 012f 13       		.uleb128 0x13
+ 1574 0130 3F       		.uleb128 0x3f
+ 1575 0131 19       		.uleb128 0x19
+ 1576 0132 3C       		.uleb128 0x3c
+ 1577 0133 19       		.uleb128 0x19
+ 1578 0134 00       		.byte	0
+ 1579 0135 00       		.byte	0
+ 1580 0136 16       		.uleb128 0x16
+ 1581 0137 35       		.uleb128 0x35
+ 1582 0138 00       		.byte	0
+ 1583 0139 49       		.uleb128 0x49
+ 1584 013a 13       		.uleb128 0x13
+ 1585 013b 00       		.byte	0
+ 1586 013c 00       		.byte	0
+ 1587 013d 17       		.uleb128 0x17
+ 1588 013e 34       		.uleb128 0x34
+ 1589 013f 00       		.byte	0
+ 1590 0140 03       		.uleb128 0x3
+ 1591 0141 0E       		.uleb128 0xe
+ 1592 0142 3A       		.uleb128 0x3a
+ 1593 0143 0B       		.uleb128 0xb
+ 1594 0144 3B       		.uleb128 0x3b
+ 1595 0145 0B       		.uleb128 0xb
+ 1596 0146 49       		.uleb128 0x49
+ 1597 0147 13       		.uleb128 0x13
+ 1598 0148 3F       		.uleb128 0x3f
+ 1599 0149 19       		.uleb128 0x19
+ 1600 014a 02       		.uleb128 0x2
+ 1601 014b 18       		.uleb128 0x18
+ 1602 014c 00       		.byte	0
+ 1603 014d 00       		.byte	0
+ 1604 014e 18       		.uleb128 0x18
+ 1605 014f 2E       		.uleb128 0x2e
+ 1606 0150 00       		.byte	0
+ 1607 0151 3F       		.uleb128 0x3f
+ 1608 0152 19       		.uleb128 0x19
+ 1609 0153 3C       		.uleb128 0x3c
+ 1610 0154 19       		.uleb128 0x19
+ 1611 0155 6E       		.uleb128 0x6e
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 33
+
+
+ 1612 0156 08       		.uleb128 0x8
+ 1613 0157 03       		.uleb128 0x3
+ 1614 0158 08       		.uleb128 0x8
+ 1615 0159 3A       		.uleb128 0x3a
+ 1616 015a 0B       		.uleb128 0xb
+ 1617 015b 3B       		.uleb128 0x3b
+ 1618 015c 0B       		.uleb128 0xb
+ 1619 015d 00       		.byte	0
+ 1620 015e 00       		.byte	0
+ 1621 015f 19       		.uleb128 0x19
+ 1622 0160 2E       		.uleb128 0x2e
+ 1623 0161 00       		.byte	0
+ 1624 0162 3F       		.uleb128 0x3f
+ 1625 0163 19       		.uleb128 0x19
+ 1626 0164 3C       		.uleb128 0x3c
+ 1627 0165 19       		.uleb128 0x19
+ 1628 0166 6E       		.uleb128 0x6e
+ 1629 0167 0E       		.uleb128 0xe
+ 1630 0168 03       		.uleb128 0x3
+ 1631 0169 0E       		.uleb128 0xe
+ 1632 016a 3A       		.uleb128 0x3a
+ 1633 016b 0B       		.uleb128 0xb
+ 1634 016c 3B       		.uleb128 0x3b
+ 1635 016d 0B       		.uleb128 0xb
+ 1636 016e 00       		.byte	0
+ 1637 016f 00       		.byte	0
+ 1638 0170 00       		.byte	0
+ 1639              		.section	.debug_loc,"",%progbits
+ 1640              	.Ldebug_loc0:
+ 1641              	.LLST0:
+ 1642 0000 02000000 		.4byte	.LVL0
+ 1643 0004 06000000 		.4byte	.LVL1
+ 1644 0008 0200     		.2byte	0x2
+ 1645 000a 30       		.byte	0x30
+ 1646 000b 9F       		.byte	0x9f
+ 1647 000c 06000000 		.4byte	.LVL1
+ 1648 0010 66000000 		.4byte	.LVL13
+ 1649 0014 0100     		.2byte	0x1
+ 1650 0016 54       		.byte	0x54
+ 1651 0017 68000000 		.4byte	.LVL14
+ 1652 001b 76000000 		.4byte	.LVL16
+ 1653 001f 0100     		.2byte	0x1
+ 1654 0021 54       		.byte	0x54
+ 1655 0022 00000000 		.4byte	0
+ 1656 0026 00000000 		.4byte	0
+ 1657              	.LLST1:
+ 1658 002a 04000000 		.4byte	.LVL18
+ 1659 002e 28000000 		.4byte	.LVL20
+ 1660 0032 0200     		.2byte	0x2
+ 1661 0034 30       		.byte	0x30
+ 1662 0035 9F       		.byte	0x9f
+ 1663 0036 28000000 		.4byte	.LVL20
+ 1664 003a 2C000000 		.4byte	.LVL21
+ 1665 003e 0200     		.2byte	0x2
+ 1666 0040 31       		.byte	0x31
+ 1667 0041 9F       		.byte	0x9f
+ 1668 0042 2C000000 		.4byte	.LVL21
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 34
+
+
+ 1669 0046 2E000000 		.4byte	.LVL22
+ 1670 004a 0200     		.2byte	0x2
+ 1671 004c 30       		.byte	0x30
+ 1672 004d 9F       		.byte	0x9f
+ 1673 004e 2E000000 		.4byte	.LVL22
+ 1674 0052 66000000 		.4byte	.LVL30
+ 1675 0056 0100     		.2byte	0x1
+ 1676 0058 54       		.byte	0x54
+ 1677 0059 66000000 		.4byte	.LVL30
+ 1678 005d 68000000 		.4byte	.LVL31
+ 1679 0061 0200     		.2byte	0x2
+ 1680 0063 30       		.byte	0x30
+ 1681 0064 9F       		.byte	0x9f
+ 1682 0065 68000000 		.4byte	.LVL31
+ 1683 0069 86000000 		.4byte	.LVL33
+ 1684 006d 0100     		.2byte	0x1
+ 1685 006f 54       		.byte	0x54
+ 1686 0070 86000000 		.4byte	.LVL33
+ 1687 0074 88000000 		.4byte	.LVL34
+ 1688 0078 0200     		.2byte	0x2
+ 1689 007a 31       		.byte	0x31
+ 1690 007b 9F       		.byte	0x9f
+ 1691 007c 88000000 		.4byte	.LVL34
+ 1692 0080 3C010000 		.4byte	.LVL53
+ 1693 0084 0100     		.2byte	0x1
+ 1694 0086 54       		.byte	0x54
+ 1695 0087 00000000 		.4byte	0
+ 1696 008b 00000000 		.4byte	0
+ 1697              	.LLST2:
+ 1698 008f 04000000 		.4byte	.LVL18
+ 1699 0093 E6000000 		.4byte	.LVL43
+ 1700 0097 0200     		.2byte	0x2
+ 1701 0099 30       		.byte	0x30
+ 1702 009a 9F       		.byte	0x9f
+ 1703 009b E6000000 		.4byte	.LVL43
+ 1704 009f F6000000 		.4byte	.LVL44
+ 1705 00a3 0200     		.2byte	0x2
+ 1706 00a5 31       		.byte	0x31
+ 1707 00a6 9F       		.byte	0x9f
+ 1708 00a7 F6000000 		.4byte	.LVL44
+ 1709 00ab 08010000 		.4byte	.LVL45
+ 1710 00af 0200     		.2byte	0x2
+ 1711 00b1 30       		.byte	0x30
+ 1712 00b2 9F       		.byte	0x9f
+ 1713 00b3 08010000 		.4byte	.LVL45
+ 1714 00b7 1A010000 		.4byte	.LVL46
+ 1715 00bb 0200     		.2byte	0x2
+ 1716 00bd 31       		.byte	0x31
+ 1717 00be 9F       		.byte	0x9f
+ 1718 00bf 1A010000 		.4byte	.LVL46
+ 1719 00c3 22010000 		.4byte	.LVL47
+ 1720 00c7 0200     		.2byte	0x2
+ 1721 00c9 30       		.byte	0x30
+ 1722 00ca 9F       		.byte	0x9f
+ 1723 00cb 22010000 		.4byte	.LVL47
+ 1724 00cf 24010000 		.4byte	.LVL48
+ 1725 00d3 0200     		.2byte	0x2
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 35
+
+
+ 1726 00d5 31       		.byte	0x31
+ 1727 00d6 9F       		.byte	0x9f
+ 1728 00d7 24010000 		.4byte	.LVL48
+ 1729 00db 2A010000 		.4byte	.LVL49
+ 1730 00df 0100     		.2byte	0x1
+ 1731 00e1 53       		.byte	0x53
+ 1732 00e2 2A010000 		.4byte	.LVL49
+ 1733 00e6 2C010000 		.4byte	.LVL50
+ 1734 00ea 0200     		.2byte	0x2
+ 1735 00ec 30       		.byte	0x30
+ 1736 00ed 9F       		.byte	0x9f
+ 1737 00ee 2C010000 		.4byte	.LVL50
+ 1738 00f2 31010000 		.4byte	.LVL51-1
+ 1739 00f6 0100     		.2byte	0x1
+ 1740 00f8 53       		.byte	0x53
+ 1741 00f9 00000000 		.4byte	0
+ 1742 00fd 00000000 		.4byte	0
+ 1743              	.LLST3:
+ 1744 0101 C4000000 		.4byte	.LVL42
+ 1745 0105 31010000 		.4byte	.LVL51-1
+ 1746 0109 0100     		.2byte	0x1
+ 1747 010b 50       		.byte	0x50
+ 1748 010c 00000000 		.4byte	0
+ 1749 0110 00000000 		.4byte	0
+ 1750              		.section	.debug_aranges,"",%progbits
+ 1751 0000 3C000000 		.4byte	0x3c
+ 1752 0004 0200     		.2byte	0x2
+ 1753 0006 00000000 		.4byte	.Ldebug_info0
+ 1754 000a 04       		.byte	0x4
+ 1755 000b 00       		.byte	0
+ 1756 000c 0000     		.2byte	0
+ 1757 000e 0000     		.2byte	0
+ 1758 0010 00000000 		.4byte	.LFB66
+ 1759 0014 A0000000 		.4byte	.LFE66-.LFB66
+ 1760 0018 00000000 		.4byte	.LFB67
+ 1761 001c 20000000 		.4byte	.LFE67-.LFB67
+ 1762 0020 00000000 		.4byte	.LFB65
+ 1763 0024 50010000 		.4byte	.LFE65-.LFB65
+ 1764 0028 00000000 		.4byte	.LFB64
+ 1765 002c 54000000 		.4byte	.LFE64-.LFB64
+ 1766 0030 00000000 		.4byte	.LFB68
+ 1767 0034 02000000 		.4byte	.LFE68-.LFB68
+ 1768 0038 00000000 		.4byte	0
+ 1769 003c 00000000 		.4byte	0
+ 1770              		.section	.debug_ranges,"",%progbits
+ 1771              	.Ldebug_ranges0:
+ 1772 0000 CC000000 		.4byte	.LBB3
+ 1773 0004 1A010000 		.4byte	.LBE3
+ 1774 0008 22010000 		.4byte	.LBB4
+ 1775 000c 2A010000 		.4byte	.LBE4
+ 1776 0010 00000000 		.4byte	0
+ 1777 0014 00000000 		.4byte	0
+ 1778 0018 00000000 		.4byte	.LFB66
+ 1779 001c A0000000 		.4byte	.LFE66
+ 1780 0020 00000000 		.4byte	.LFB67
+ 1781 0024 20000000 		.4byte	.LFE67
+ 1782 0028 00000000 		.4byte	.LFB65
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 36
+
+
+ 1783 002c 50010000 		.4byte	.LFE65
+ 1784 0030 00000000 		.4byte	.LFB64
+ 1785 0034 54000000 		.4byte	.LFE64
+ 1786 0038 00000000 		.4byte	.LFB68
+ 1787 003c 02000000 		.4byte	.LFE68
+ 1788 0040 00000000 		.4byte	0
+ 1789 0044 00000000 		.4byte	0
+ 1790              		.section	.debug_line,"",%progbits
+ 1791              	.Ldebug_line0:
+ 1792 0000 04030000 		.section	.debug_str,"MS",%progbits,1
+ 1792      02002102 
+ 1792      00000201 
+ 1792      FB0E0D00 
+ 1792      01010101 
+ 1793              	.LASF45:
+ 1794 0000 4C43445F 		.ascii	"LCD_Start\000"
+ 1794      53746172 
+ 1794      7400
+ 1795              	.LASF9:
+ 1796 000a 5F5F696E 		.ascii	"__int32_t\000"
+ 1796      7433325F 
+ 1796      7400
+ 1797              	.LASF34:
+ 1798 0014 57617665 		.ascii	"WaveDAC8_Wave1Setup\000"
+ 1798      44414338 
+ 1798      5F576176 
+ 1798      65315365 
+ 1798      74757000 
+ 1799              	.LASF40:
+ 1800 0028 736E7072 		.ascii	"snprintf\000"
+ 1800      696E7466 
+ 1800      00
+ 1801              	.LASF28:
+ 1802 0031 616D706C 		.ascii	"amplitude\000"
+ 1802      69747564 
+ 1802      6500
+ 1803              	.LASF33:
+ 1804 003b 6261724C 		.ascii	"barLength\000"
+ 1804      656E6774 
+ 1804      6800
+ 1805              	.LASF20:
+ 1806 0045 43617053 		.ascii	"CapSense_DisplayState\000"
+ 1806      656E7365 
+ 1806      5F446973 
+ 1806      706C6179 
+ 1806      53746174 
+ 1807              	.LASF26:
+ 1808 005b 44697370 		.ascii	"DisplayBar\000"
+ 1808      6C617942 
+ 1808      617200
+ 1809              	.LASF13:
+ 1810 0066 666C6F61 		.ascii	"float\000"
+ 1810      7400
+ 1811              	.LASF19:
+ 1812 006c 55706461 		.ascii	"UpdateClockFrequency\000"
+ 1812      7465436C 
+ 1812      6F636B46 
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 37
+
+
+ 1812      72657175 
+ 1812      656E6379 
+ 1813              	.LASF46:
+ 1814 0081 57617665 		.ascii	"WaveDAC8_Start\000"
+ 1814      44414338 
+ 1814      5F537461 
+ 1814      727400
+ 1815              	.LASF50:
+ 1816 0090 43617053 		.ascii	"CapSense_CSD_ScanEnabledWidgets\000"
+ 1816      656E7365 
+ 1816      5F435344 
+ 1816      5F536361 
+ 1816      6E456E61 
+ 1817              	.LASF53:
+ 1818 00b0 453A5C45 		.ascii	"E:\\Embeded System Lab\\ENDSEM-PROJECT\\COMPLETE pr"
+ 1818      6D626564 
+ 1818      65642053 
+ 1818      79737465 
+ 1818      6D204C61 
+ 1819 00e0 6F6A6563 		.ascii	"oject\\Workspace-Final\\Design02.cydsn\000"
+ 1819      745C576F 
+ 1819      726B7370 
+ 1819      6163652D 
+ 1819      46696E61 
+ 1820              	.LASF1:
+ 1821 0105 756E7369 		.ascii	"unsigned char\000"
+ 1821      676E6564 
+ 1821      20636861 
+ 1821      7200
+ 1822              	.LASF51:
+ 1823 0113 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1823      43313120 
+ 1823      352E342E 
+ 1823      31203230 
+ 1823      31363036 
+ 1824 0146 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1824      20726576 
+ 1824      6973696F 
+ 1824      6E203233 
+ 1824      37373135 
+ 1825 0179 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 1825      66756E63 
+ 1825      74696F6E 
+ 1825      2D736563 
+ 1825      74696F6E 
+ 1826              	.LASF47:
+ 1827 01a1 436C6F63 		.ascii	"Clock_1_Start\000"
+ 1827      6B5F315F 
+ 1827      53746172 
+ 1827      7400
+ 1828              	.LASF18:
+ 1829 01af 47656E65 		.ascii	"GenerateSineWave\000"
+ 1829      72617465 
+ 1829      53696E65 
+ 1829      57617665 
+ 1829      00
+ 1830              	.LASF22:
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 38
+
+
+ 1831 01c0 616D706C 		.ascii	"amplitudeChanged\000"
+ 1831      69747564 
+ 1831      65436861 
+ 1831      6E676564 
+ 1831      00
+ 1832              	.LASF5:
+ 1833 01d1 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1833      20756E73 
+ 1833      69676E65 
+ 1833      6420696E 
+ 1833      7400
+ 1834              	.LASF35:
+ 1835 01e3 436C6F63 		.ascii	"Clock_1_SetDividerRegister\000"
+ 1835      6B5F315F 
+ 1835      53657444 
+ 1835      69766964 
+ 1835      65725265 
+ 1836              	.LASF24:
+ 1837 01fe 63757250 		.ascii	"curPos\000"
+ 1837      6F7300
+ 1838              	.LASF27:
+ 1839 0205 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 1839      52784275 
+ 1839      66666572 
+ 1839      00
+ 1840              	.LASF49:
+ 1841 0212 43617053 		.ascii	"CapSense_CSD_UpdateEnabledBaselines\000"
+ 1841      656E7365 
+ 1841      5F435344 
+ 1841      5F557064 
+ 1841      61746545 
+ 1842              	.LASF14:
+ 1843 0236 646F7562 		.ascii	"double\000"
+ 1843      6C6500
+ 1844              	.LASF12:
+ 1845 023d 75696E74 		.ascii	"uint16\000"
+ 1845      313600
+ 1846              	.LASF2:
+ 1847 0244 73686F72 		.ascii	"short int\000"
+ 1847      7420696E 
+ 1847      7400
+ 1848              	.LASF39:
+ 1849 024e 4C43445F 		.ascii	"LCD_PrintString\000"
+ 1849      5072696E 
+ 1849      74537472 
+ 1849      696E6700 
+ 1850              	.LASF30:
+ 1851 025e 77617665 		.ascii	"waveData\000"
+ 1851      44617461 
+ 1851      00
+ 1852              	.LASF44:
+ 1853 0267 43617053 		.ascii	"CapSense_CSD_InitializeAllBaselines\000"
+ 1853      656E7365 
+ 1853      5F435344 
+ 1853      5F496E69 
+ 1853      7469616C 
+ 1854              	.LASF42:
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 39
+
+
+ 1855 028b 43617053 		.ascii	"CapSense_CSD_GetCentroidPos\000"
+ 1855      656E7365 
+ 1855      5F435344 
+ 1855      5F476574 
+ 1855      43656E74 
+ 1856              	.LASF8:
+ 1857 02a7 756E7369 		.ascii	"unsigned int\000"
+ 1857      676E6564 
+ 1857      20696E74 
+ 1857      00
+ 1858              	.LASF7:
+ 1859 02b4 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1859      206C6F6E 
+ 1859      6720756E 
+ 1859      7369676E 
+ 1859      65642069 
+ 1860              	.LASF38:
+ 1861 02cb 4C43445F 		.ascii	"LCD_Position\000"
+ 1861      506F7369 
+ 1861      74696F6E 
+ 1861      00
+ 1862              	.LASF31:
+ 1863 02d8 66726571 		.ascii	"frequency\000"
+ 1863      75656E63 
+ 1863      7900
+ 1864              	.LASF54:
+ 1865 02e2 6D61696E 		.ascii	"main\000"
+ 1865      00
+ 1866              	.LASF32:
+ 1867 02e7 636C6F63 		.ascii	"clockDivider\000"
+ 1867      6B446976 
+ 1867      69646572 
+ 1867      00
+ 1868              	.LASF48:
+ 1869 02f4 43617053 		.ascii	"CapSense_CSD_IsBusy\000"
+ 1869      656E7365 
+ 1869      5F435344 
+ 1869      5F497342 
+ 1869      75737900 
+ 1870              	.LASF10:
+ 1871 0308 696E7433 		.ascii	"int32_t\000"
+ 1871      325F7400 
+ 1872              	.LASF17:
+ 1873 0310 73697A65 		.ascii	"sizetype\000"
+ 1873      74797065 
+ 1873      00
+ 1874              	.LASF21:
+ 1875 0319 64697370 		.ascii	"displayBuffer\000"
+ 1875      6C617942 
+ 1875      75666665 
+ 1875      7200
+ 1876              	.LASF6:
+ 1877 0327 6C6F6E67 		.ascii	"long long int\000"
+ 1877      206C6F6E 
+ 1877      6720696E 
+ 1877      7400
+ 1878              	.LASF52:
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 40
+
+
+ 1879 0335 6D61696E 		.ascii	"main.c\000"
+ 1879      2E6300
+ 1880              	.LASF15:
+ 1881 033c 63686172 		.ascii	"char\000"
+ 1881      00
+ 1882              	.LASF37:
+ 1883 0341 4C43445F 		.ascii	"LCD_WriteControl\000"
+ 1883      57726974 
+ 1883      65436F6E 
+ 1883      74726F6C 
+ 1883      00
+ 1884              	.LASF43:
+ 1885 0352 43617053 		.ascii	"CapSense_CSD_Start\000"
+ 1885      656E7365 
+ 1885      5F435344 
+ 1885      5F537461 
+ 1885      727400
+ 1886              	.LASF23:
+ 1887 0365 66726571 		.ascii	"frequencyChanged\000"
+ 1887      75656E63 
+ 1887      79436861 
+ 1887      6E676564 
+ 1887      00
+ 1888              	.LASF36:
+ 1889 0376 43617053 		.ascii	"CapSense_CSD_CheckIsWidgetActive\000"
+ 1889      656E7365 
+ 1889      5F435344 
+ 1889      5F436865 
+ 1889      636B4973 
+ 1890              	.LASF29:
+ 1891 0397 7468656F 		.ascii	"theoreticalAmplitude\000"
+ 1891      72657469 
+ 1891      63616C41 
+ 1891      6D706C69 
+ 1891      74756465 
+ 1892              	.LASF11:
+ 1893 03ac 75696E74 		.ascii	"uint8\000"
+ 1893      3800
+ 1894              	.LASF4:
+ 1895 03b2 6C6F6E67 		.ascii	"long int\000"
+ 1895      20696E74 
+ 1895      00
+ 1896              	.LASF16:
+ 1897 03bb 6C6F6E67 		.ascii	"long double\000"
+ 1897      20646F75 
+ 1897      626C6500 
+ 1898              	.LASF0:
+ 1899 03c7 7369676E 		.ascii	"signed char\000"
+ 1899      65642063 
+ 1899      68617200 
+ 1900              	.LASF25:
+ 1901 03d3 70726576 		.ascii	"prevPos\000"
+ 1901      506F7300 
+ 1902              	.LASF3:
+ 1903 03db 73686F72 		.ascii	"short unsigned int\000"
+ 1903      7420756E 
+ 1903      7369676E 
+ARM GAS  C:\Users\aryan\AppData\Local\Temp\ccAtf3yd.s 			page 41
+
+
+ 1903      65642069 
+ 1903      6E7400
+ 1904              	.LASF55:
+ 1905 03ee 6C656E67 		.ascii	"length\000"
+ 1905      746800
+ 1906              	.LASF41:
+ 1907 03f5 43794465 		.ascii	"CyDelay\000"
+ 1907      6C617900 
+ 1908              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
